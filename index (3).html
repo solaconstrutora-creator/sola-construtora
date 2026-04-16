@@ -1,0 +1,2005 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Sola Construtora</title>
+<link rel="manifest" href="data:application/json,{}">
+<!-- ========================================================
+  CREDENCIAIS SUPABASE — edite as linhas abaixo e salve o HTML.
+  Após configurar, use "Salvar HTML Atualizado" para compartilhar
+  o arquivo já configurado com qualquer pessoa/dispositivo.
+  ======================================================== -->
+<script>
+window.SOLA_CFG = {
+  url: 'https://nfsllzdhsconckpjdmzj.supabase.co',
+  key: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5mc2xsemRoc2NvbmNrcGpkbXpqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU3NTgwNjEsImV4cCI6MjA5MTMzNDA2MX0.iC0JxKKy21g232_fyX_AKhwcO4KR-NlLMw-neg9UkOE'
+};
+</script>
+<style>
+@import url('https://fonts.cdnfonts.com/css/futura-pt');
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --f:'Futura PT','Futura','Century Gothic',sans-serif;
+  --bg:#F2F1EC;--sur:#FFF;--sur2:#F0EFE9;--sur3:#F7F6F2;
+  --bor:#D5D3CB;--t:#181816;--t2:#55544F;--t3:#91908A;
+  --ac:#2C5F3F;--acl:#E4F0E9;--ach:#1E4A2E;
+  --da:#BE3B2B;--dal:#FCECEA;--wa:#C9700A;--wal:#FEF0E0;
+  --in:#155C87;--inl:#E3EEF6;
+  --r:8px;--rl:14px;--rxl:20px;
+  --sb:240px;--tbh:56px;
+}
+html{font-size:15px}
+body{font-family:var(--f);background:var(--bg);color:var(--t);line-height:1.55;min-height:100vh;overflow-x:hidden}
+
+/* SETUP SCREEN */
+#setupScreen{position:fixed;inset:0;background:var(--t);z-index:9999;display:flex;align-items:center;justify-content:center;padding:20px}
+#setupScreen.hidden{display:none}
+.setup-box{background:var(--sur);border-radius:var(--rxl);padding:32px;width:100%;max-width:540px;box-shadow:0 24px 60px rgba(0,0,0,.4)}
+.setup-logo{font-size:22px;font-weight:800;letter-spacing:3px;color:var(--ac);margin-bottom:4px}
+.setup-sub{font-size:11px;letter-spacing:3px;color:var(--t3);margin-bottom:24px}
+.setup-title{font-size:20px;font-weight:800;margin-bottom:8px}
+.setup-desc{font-size:13px;color:var(--t2);line-height:1.7;margin-bottom:20px}
+.setup-step{background:var(--inl);border-radius:var(--r);padding:12px 14px;margin-bottom:16px;font-size:13px;color:#0C3A5E;line-height:1.7}
+.setup-sql{background:#1A1A1A;border-radius:var(--r);padding:11px;font-family:monospace;font-size:11px;color:#70E9A0;margin-bottom:16px;white-space:pre-wrap;line-height:1.6;user-select:all;cursor:text}
+.setup-input{width:100%;padding:11px 13px;border:1.5px solid var(--bor);border-radius:var(--r);font-family:var(--f);font-size:14px;color:var(--t);background:var(--sur);outline:none;margin-bottom:12px;transition:border-color .14s;-webkit-appearance:none}
+.setup-input:focus{border-color:var(--ac)}
+.setup-btn{width:100%;padding:13px;border-radius:var(--r);border:none;cursor:pointer;font-family:var(--f);font-size:15px;font-weight:800;background:var(--ac);color:#fff;transition:background .14s;letter-spacing:.5px}
+.setup-btn:hover{background:var(--ach)}
+.setup-btn:disabled{opacity:.5;cursor:not-allowed}
+.setup-status{font-size:13px;margin-top:10px;min-height:20px;text-align:center;font-weight:600}
+.setup-skip{font-size:12px;color:var(--t3);text-align:center;margin-top:12px;cursor:pointer;text-decoration:underline}
+
+/* SIDEBAR */
+.sb{position:fixed;top:0;left:0;width:var(--sb);height:100vh;background:#181816;display:flex;flex-direction:column;z-index:300;transition:transform .25s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.sb-logo{padding:20px 18px 14px;border-bottom:1px solid rgba(255,255,255,.08);flex-shrink:0;display:flex;align-items:center;justify-content:space-between}
+.sb-logo .br{font-size:19px;font-weight:800;letter-spacing:3px;color:#fff}
+.sb-logo .su{font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.38);margin-top:2px}
+.sb-close{display:none;background:none;border:none;color:rgba(255,255,255,.5);font-size:22px;cursor:pointer;padding:4px 8px;min-width:36px;min-height:36px;align-items:center;justify-content:center}
+.sb-sec{padding:14px 14px 5px;font-size:9px;letter-spacing:3px;color:rgba(255,255,255,.28);text-transform:uppercase;flex-shrink:0}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 14px;cursor:pointer;border-radius:7px;margin:2px 8px;font-size:14px;color:rgba(255,255,255,.7);transition:all .14s;flex-shrink:0;user-select:none;min-height:44px}
+.ni:hover,.ni:active{background:rgba(255,255,255,.09);color:#fff}
+.ni.active{background:var(--ac);color:#fff}
+.ni svg{width:16px;height:16px;opacity:.85;flex-shrink:0}
+.sb-div{height:1px;background:rgba(255,255,255,.06);margin:6px 14px;flex-shrink:0}
+.sb-emps{flex:1;overflow-y:auto;padding:5px 8px 5px;scrollbar-width:none}
+.sb-emps::-webkit-scrollbar{display:none}
+.sb-emp{padding:9px 11px;border-radius:7px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.68);display:flex;align-items:center;gap:8px;margin-bottom:2px;transition:all .12s;min-height:44px}
+.sb-emp:hover,.sb-emp:active{background:rgba(255,255,255,.09);color:#fff}
+.sb-emp.active{background:rgba(255,255,255,.14);color:#fff;font-weight:700}
+.sb-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;background:var(--ac)}
+.sb-emp.active .sb-dot{background:#70E9A0}
+.sb-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1}
+.sb-pct{font-size:11px;color:rgba(255,255,255,.38);flex-shrink:0}
+.sb-add{display:flex;align-items:center;gap:8px;padding:9px 11px;border-radius:7px;cursor:pointer;font-size:13px;color:rgba(255,255,255,.38);transition:all .12s;margin:2px 0 4px;flex-shrink:0;min-height:44px}
+.sb-add:hover{color:rgba(255,255,255,.75);background:rgba(255,255,255,.06)}
+.sync-bar{padding:7px 12px;font-size:11px;display:flex;align-items:center;gap:7px;flex-shrink:0;border-top:1px solid rgba(255,255,255,.06);color:rgba(255,255,255,.4);min-height:36px}
+.sync-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.sync-dot.ok{background:#70E9A0}
+.sync-dot.syncing{background:#F5A623;animation:blink 1s infinite}
+.sync-dot.err{background:#E57373}
+.sync-dot.local{background:rgba(255,255,255,.28)}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:250}
+.sb-overlay.show{display:block}
+
+/* TOPBAR */
+.tb{background:var(--sur);border-bottom:1px solid var(--bor);padding:0 16px;height:var(--tbh);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:90;margin-left:var(--sb);gap:10px;transition:margin-left .25s}
+.tb-l{display:flex;align-items:center;gap:10px;min-width:0;flex:1}
+.menu-btn{display:none;background:none;border:1.5px solid var(--bor);border-radius:var(--r);padding:7px 10px;cursor:pointer;font-size:18px;color:var(--t2);min-width:40px;min-height:40px;align-items:center;justify-content:center;flex-shrink:0}
+.tb-text{min-width:0;overflow:hidden}
+.tb-bread{font-size:11px;color:var(--t3);display:flex;align-items:center;gap:5px}
+.tb-bread .crumb{cursor:pointer;white-space:nowrap}.tb-bread .crumb:hover{color:var(--ac)}
+.tb-title{font-size:15px;font-weight:800;letter-spacing:.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-r{display:flex;align-items:center;gap:7px;flex-shrink:0}
+
+/* BUTTONS */
+.btn{padding:8px 14px;border-radius:var(--r);border:none;cursor:pointer;font-family:var(--f);font-size:13px;letter-spacing:.3px;font-weight:700;transition:all .14s;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;min-height:40px;user-select:none}
+.bp{background:var(--ac);color:#fff}.bp:hover,.bp:active{background:var(--ach)}
+.bo{background:none;border:1.5px solid var(--bor);color:var(--t2)}.bo:hover,.bo:active{border-color:var(--ac);color:var(--ac)}
+.bd{background:var(--da);color:#fff}
+.bs{padding:6px 11px;font-size:12px;min-height:36px}
+.bxs{padding:4px 9px;font-size:11px;min-height:32px}
+.nb{position:relative;background:none;border:1.5px solid var(--bor);border-radius:var(--r);padding:7px 10px;cursor:pointer;font-size:16px;color:var(--t2);min-width:40px;min-height:40px;display:flex;align-items:center;justify-content:center}
+.nbg{position:absolute;top:-5px;right:-5px;background:var(--da);color:#fff;border-radius:50%;width:17px;height:17px;font-size:9px;display:flex;align-items:center;justify-content:center;font-weight:800}
+
+/* MAIN */
+.main{margin-left:var(--sb);min-height:100vh;display:flex;flex-direction:column;transition:margin-left .25s}
+.cnt{padding:18px;flex:1}
+.page{display:none}.page.active{display:block}
+
+/* CARDS */
+.card{background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.05)}
+.card-sm{padding:12px 14px}
+
+/* GRIDS */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.g-auto{display:grid;grid-template-columns:repeat(auto-fill,minmax(275px,1fr));gap:14px}
+
+/* STAT */
+.stat{background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);padding:15px 16px}
+.stat-v{font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1}
+.stat-l{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-top:5px}
+.stat-s{font-size:12px;color:var(--t3);margin-top:4px}
+
+/* PILLS */
+.pill{padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;display:inline-flex;align-items:center;white-space:nowrap}
+.ps{background:#E5F5ED;color:#186835}.pw{background:var(--wal);color:#7A4200}
+.pd{background:var(--dal);color:#8B1810}.pi{background:var(--inl);color:#0C3A5E}
+.pn{background:#EEEDE8;color:var(--t2)}.pp{background:#F0EBF9;color:#422878}.pa{background:#F2F2EC;color:var(--t3)}
+
+/* PROGRESS */
+.pbar{height:5px;background:#E8E7E0;border-radius:4px;overflow:hidden}
+.pfill{height:100%;border-radius:4px;transition:width .4s}
+
+/* PRIORITY */
+.pra{color:var(--da);font-weight:800;font-size:12px}.prm{color:var(--wa);font-weight:800;font-size:12px}.prb{color:var(--ac);font-weight:800;font-size:12px}
+
+/* CARD-LIST (mobile rows) */
+.card-list{display:flex;flex-direction:column;gap:9px}
+.card-row{background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);padding:13px 15px;cursor:pointer;transition:background .1s}
+.card-row:active{background:var(--sur2)}
+
+/* FORM */
+.fg{margin-bottom:14px}
+.fl{font-size:11px;letter-spacing:1px;text-transform:uppercase;color:var(--t2);margin-bottom:6px;display:block;font-weight:700}
+.fc{width:100%;padding:10px 12px;border:1.5px solid var(--bor);border-radius:var(--r);font-family:var(--f);font-size:14px;color:var(--t);background:var(--sur);outline:none;transition:border-color .14s;-webkit-appearance:none}
+.fc:focus{border-color:var(--ac)}
+select.fc{cursor:pointer}
+textarea.fc{resize:vertical;min-height:70px}
+
+/* MODAL (bottom sheet) */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:400;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.mo.open{opacity:1;pointer-events:all}
+.md{background:var(--sur);border-radius:var(--rxl) var(--rxl) 0 0;padding:20px 18px 28px;width:100%;max-width:680px;max-height:94vh;overflow-y:auto;position:relative;transform:translateY(30px);transition:transform .2s}
+.mo.open .md{transform:translateY(0)}
+.md-handle{width:36px;height:4px;background:var(--bor);border-radius:2px;margin:0 auto 14px}
+.mt{font-size:17px;font-weight:800;margin-bottom:16px}
+.mc{position:absolute;top:14px;right:14px;background:none;border:none;font-size:22px;cursor:pointer;color:var(--t3);min-width:36px;min-height:36px;display:flex;align-items:center;justify-content:center}
+
+/* NOTIF PANEL */
+.np{position:fixed;inset:0;z-index:350;pointer-events:none;opacity:0;transition:opacity .2s}
+.np.open{opacity:1;pointer-events:all}
+.np-bg{position:absolute;inset:0;background:rgba(0,0,0,.5)}
+.np-panel{position:absolute;top:0;right:0;width:min(380px,100vw);height:100vh;background:var(--sur);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .25s}
+.np.open .np-panel{transform:translateX(0)}
+.np-h{padding:15px 17px;border-bottom:1px solid var(--bor);display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.np-list{flex:1;overflow-y:auto;padding:11px}
+.nitem{padding:11px 13px;border-radius:var(--r);margin-bottom:8px;border-left:4px solid transparent}
+.nitem.danger{background:var(--dal);border-left-color:var(--da)}
+.nitem.warn{background:var(--wal);border-left-color:var(--wa)}
+.nitem.info{background:var(--inl);border-left-color:var(--in)}
+
+/* EMP TABS */
+.etabs{display:flex;border-bottom:2px solid var(--bor);margin-bottom:18px;overflow-x:auto;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.etabs::-webkit-scrollbar{display:none}
+.etab{padding:10px 14px;cursor:pointer;font-size:13px;font-weight:700;color:var(--t3);border-bottom:2.5px solid transparent;margin-bottom:-2px;white-space:nowrap;user-select:none;transition:all .14s;min-height:44px;display:flex;align-items:center}
+.etab.active{color:var(--ac);border-bottom-color:var(--ac)}
+.tp{display:none}.tp.active{display:block}
+
+/* EMP CARD */
+.ecard{background:var(--sur);border:1px solid var(--bor);border-radius:var(--rxl);overflow:hidden;cursor:pointer;transition:transform .14s,box-shadow .14s}
+.ecard:active{transform:scale(.98)}
+
+/* ACCORDION */
+.acc{background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);margin-bottom:10px;overflow:hidden}
+.acc-h{padding:13px 15px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;user-select:none;min-height:52px;flex-wrap:wrap;gap:8px;transition:background .1s}
+.acc-h:active{background:var(--sur3)}
+.acc-body{display:none;padding:0 15px 15px}
+.acc-body.open{display:block}
+.acc-ch{font-size:12px;color:var(--t3);transition:transform .18s;margin-right:6px}
+.acc-ch.open{transform:rotate(180deg)}
+
+/* SECTION HEADER */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:13px;gap:8px;flex-wrap:wrap}
+.st{font-size:11px;font-weight:800;letter-spacing:2px;text-transform:uppercase}
+
+/* FILTER BAR */
+.fbar{display:flex;gap:6px;overflow-x:auto;padding-bottom:2px;-webkit-overflow-scrolling:touch;scrollbar-width:none;flex-shrink:0}
+.fbar::-webkit-scrollbar{display:none}
+.fb{padding:6px 12px;border:1.5px solid var(--bor);border-radius:20px;background:none;cursor:pointer;font-family:var(--f);font-size:12px;color:var(--t2);font-weight:600;transition:all .13s;white-space:nowrap;min-height:35px}
+.fb.active{background:var(--ac);color:#fff;border-color:var(--ac)}
+
+/* UPLOAD */
+.uz{border:1.5px dashed var(--bor);border-radius:var(--r);padding:13px;text-align:center;color:var(--t3);font-size:13px;cursor:pointer;min-height:50px;display:flex;align-items:center;justify-content:center}
+
+/* CHECKLIST */
+.chk-item{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--sur2)}
+.chk-item:last-child{border-bottom:none}
+.chk-box{width:22px;height:22px;border:2px solid var(--bor);border-radius:6px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;transition:all .15s;background:var(--sur);cursor:pointer}
+.chk-box.done{background:var(--ac);border-color:var(--ac)}
+.chk-box.done::after{content:'✓';color:#fff;font-size:13px;font-weight:800}
+.chk-info{flex:1;min-width:0;cursor:pointer}
+.chk-name{font-size:14px;font-weight:600}
+.chk-name.done{text-decoration:line-through;color:var(--t3)}
+.chk-meta{font-size:12px;color:var(--t3);margin-top:3px;display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+
+/* AVATAR */
+.av{width:26px;height:26px;border-radius:50%;background:var(--acl);color:var(--ac);font-size:10px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* TAG */
+.tag{background:var(--sur2);border-radius:5px;padding:2px 7px;font-size:12px;color:var(--t2);display:inline-block}
+.tag strong{color:var(--t)}
+
+/* TOAST */
+#toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);background:#181816;color:#fff;border-radius:var(--r);padding:10px 18px;font-size:13px;font-weight:600;opacity:0;transition:opacity .22s;z-index:999;pointer-events:none;max-width:90vw;text-align:center;white-space:nowrap}
+#toast.show{opacity:1}
+
+/* UTILS */
+.flex{display:flex}.ac_{align-items:center}.jb{justify-content:space-between}.col{flex-direction:column}.wrap{flex-wrap:wrap}
+.gap6{gap:6px}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}.gap16{gap:16px}
+.mb8{margin-bottom:8px}.mb12{margin-bottom:12px}.mb14{margin-bottom:14px}.mb16{margin-bottom:16px}.mb20{margin-bottom:20px}
+.mt8{margin-top:8px}.mt12{margin-top:12px}.mt16{margin-top:16px}
+.fw7{font-weight:700}.fw8{font-weight:800}.w100{width:100%}
+.fs14{font-size:14px}.fs13{font-size:13px}.fs12{font-size:12px}.fs11{font-size:11px}
+.tc{color:var(--t3)}.t2c{color:var(--t2)}
+::-webkit-scrollbar{width:3px;height:3px}::-webkit-scrollbar-thumb{background:var(--bor);border-radius:3px}
+
+/* MOBILE */
+@media(max-width:768px){
+  :root{--sb:0px;--tbh:52px}
+  .sb{transform:translateX(-100%);width:min(280px,85vw)}
+  .sb.open{transform:translateX(0)}
+  .sb-close{display:flex}
+  .main,.tb{margin-left:0}
+  .menu-btn{display:flex}
+  .cnt{padding:12px}
+  .g2{grid-template-columns:1fr}
+  .g3{grid-template-columns:1fr 1fr}
+  .g4{grid-template-columns:1fr 1fr}
+  .g-auto{grid-template-columns:1fr}
+  .hide-mob{display:none}
+}
+@media(max-width:420px){
+  .g3,.g4{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- SETUP SCREEN — auto-hidden (credentials embedded) -->
+<div id="setupScreen" class="hidden">
+  <div class="setup-box">
+    <div class="setup-logo">SOLA</div>
+    <div class="setup-sub">CONSTRUTORA</div>
+    <div class="setup-title">Conectando...</div>
+  </div>
+</div>
+<!-- OVERLAY -->
+<div class="sb-overlay" id="sbOverlay" onclick="closeSb()"></div>
+
+<!-- SIDEBAR -->
+<nav class="sb" id="sidebar">
+  <div class="sb-logo">
+    <div><div class="br">SOLA</div><div class="su">CONSTRUTORA</div></div>
+    <button class="sb-close" onclick="closeSb()">✕</button>
+  </div>
+  <div class="sb-sec">Menu</div>
+  <div class="ni active" data-p="home" onclick="goPage('home',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5" stroke-width="2"/><rect x="14" y="3" width="7" height="7" rx="1.5" stroke-width="2"/><rect x="3" y="14" width="7" height="7" rx="1.5" stroke-width="2"/><rect x="14" y="14" width="7" height="7" rx="1.5" stroke-width="2"/></svg>Painel Geral
+  </div>
+  <div class="ni" data-p="notif" onclick="goPage('notif',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6 6 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-width="2"/></svg>Notificações
+  </div>
+  <div class="ni" data-p="cal" onclick="goPage('cal',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke-width="2"/><path d="M16 2v4M8 2v4M3 10h18" stroke-width="2"/></svg>Calendário
+  </div>
+  <div class="ni" data-p="cfg" onclick="goPage('cfg',this)">
+    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3" stroke-width="2"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z" stroke-width="2"/></svg>Configurações
+  </div>
+  <div class="sb-div"></div>
+  <div class="sb-sec">Empreendimentos</div>
+  <div class="sb-emps" id="sbEmps"></div>
+  <div class="sb-add" onclick="openM('emp')">＋ Novo empreendimento</div>
+  <div class="sync-bar"><div class="sync-dot local" id="syncDot"></div><span id="syncMsg" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">Inicializando...</span></div>
+</nav>
+
+<!-- NOTIF PANEL -->
+<div class="np" id="npanel">
+  <div class="np-bg" onclick="toggleNotif()"></div>
+  <div class="np-panel">
+    <div class="np-h"><span style="font-size:14px;font-weight:800">NOTIFICAÇÕES</span><button class="btn bo bs" onclick="toggleNotif()">✕</button></div>
+    <div class="np-list" id="notifList"></div>
+  </div>
+</div>
+
+<!-- TOPBAR -->
+<div class="tb">
+  <div class="tb-l">
+    <button class="menu-btn" onclick="openSb()">☰</button>
+    <div class="tb-text">
+      <div class="tb-bread" id="tbBread"></div>
+      <div class="tb-title" id="tbTitle">PAINEL GERAL</div>
+    </div>
+  </div>
+  <div class="tb-r">
+    <button class="btn bo bs hide-mob" onclick="saveHtml()" title="Baixar HTML já configurado para compartilhar">⬇ Salvar HTML</button>
+    <button class="btn bo bs hide-mob" onclick="exportData()" title="Exportar dados como JSON">📦 Backup</button>
+    <label class="btn bo bs hide-mob" style="cursor:pointer">📂 Importar<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+    <button class="nb" onclick="toggleNotif()">🔔<span class="nbg" id="nbadge">0</span></button>
+    <button class="btn bp bs" id="tbAction" onclick="openM('emp')">＋ Novo</button>
+  </div>
+</div>
+
+<!-- PAGES -->
+<main class="main"><div class="cnt">
+
+<!-- HOME -->
+<div class="page active" id="page-home">
+  <div class="g4 mb20" id="homeStats"></div>
+  <div class="g2 mb20">
+    <div class="card"><div class="sh"><span class="st">Empreendimentos</span><button class="btn bo bs" onclick="goPage('emps')">Ver →</button></div><div id="homeEmpList"></div></div>
+    <div class="card"><div class="sh"><span class="st">Alertas</span><span class="pill pd" id="homeAlertBadge">0</span></div><div id="homeAlerts" style="display:flex;flex-direction:column;gap:8px"></div></div>
+  </div>
+  <div class="card">
+    <div class="sh mb12"><span class="st">Tarefas</span></div>
+    <div class="fbar mb14" id="homeFBar">
+      <button class="fb active" onclick="fHome('',this)">Todas</button>
+      <button class="fb" onclick="fHome('Em Andamento',this)">Em Andamento</button>
+      <button class="fb" onclick="fHome('Pausado',this)">Pausadas</button>
+      <button class="fb" onclick="fHome('Concluído',this)">Concluídas</button>
+      <button class="fb" onclick="fHome('Não Iniciado',this)">Não Iniciadas</button>
+    </div>
+    <div id="homeTasks" class="card-list"></div>
+  </div>
+</div>
+
+<!-- EMPS -->
+<div class="page" id="page-emps">
+  <div class="flex ac_ jb mb14 wrap gap10">
+    <input class="fc" style="max-width:250px;margin:0" placeholder="🔍 Buscar..." oninput="filterEmps(this.value)">
+    <div class="fbar" id="empSF">
+      <button class="fb active" onclick="fEmpS('',this)">Todos</button>
+      <button class="fb" onclick="fEmpS('Ativo',this)">Ativos</button>
+      <button class="fb" onclick="fEmpS('Planejamento',this)">Planejamento</button>
+      <button class="fb" onclick="fEmpS('Concluído',this)">Concluídos</button>
+    </div>
+  </div>
+  <div class="g-auto" id="empGrid"></div>
+</div>
+
+<!-- EMP DETAIL -->
+<div class="page" id="page-emp">
+  <div id="empHeader" class="mb16"></div>
+  <div class="etabs">
+    <div class="etab active" data-tab="dash" onclick="switchTab('dash',this)">📊 Dashboard</div>
+    <div class="etab" data-tab="com" onclick="switchTab('com',this)">💼 Comercial</div>
+    <div class="etab" data-tab="leg" onclick="switchTab('leg',this)">📋 Legalização</div>
+    <div class="etab" data-tab="ante" onclick="switchTab('ante',this)">✏ Anteprojeto</div>
+    <div class="etab" data-tab="exec" onclick="switchTab('exec',this)">📐 Executivo</div>
+    <div class="etab" data-tab="doc" onclick="switchTab('doc',this)">📁 Documentação</div>
+    <div class="etab" data-tab="obra" onclick="switchTab('obra',this)">🏗 Obra</div>
+    <div class="etab" data-tab="aval" onclick="switchTab('aval',this)">⭐ Avaliação</div>
+  </div>
+  <div class="tp active" id="tp-dash"></div>
+  <div class="tp" id="tp-com"></div>
+  <div class="tp" id="tp-leg"></div>
+  <div class="tp" id="tp-ante"></div>
+  <div class="tp" id="tp-exec"></div>
+  <div class="tp" id="tp-doc"></div>
+  <div class="tp" id="tp-obra"></div>
+  <div class="tp" id="tp-aval"></div>
+</div>
+
+<!-- NOTIFICAÇÕES -->
+<div class="page" id="page-notif">
+  <div class="g2">
+    <div><div class="st mb14">Alertas Ativos</div><div id="notifPageList" style="display:flex;flex-direction:column;gap:9px"></div></div>
+    <div><div class="st mb14">Criar Lembrete</div>
+      <div class="card">
+        <div class="fg"><label class="fl">Tipo</label><select class="fc" id="nr-tipo"><option>Vencimento de documento</option><option>Prazo de tarefa</option><option>Lembrete periódico</option><option>Reunião</option></select></div>
+        <div class="fg"><label class="fl">Descrição</label><input class="fc" id="nr-desc" placeholder="Descreva o lembrete"></div>
+        <div class="g2 gap10"><div class="fg"><label class="fl">Data</label><input type="date" class="fc" id="nr-data"></div><div class="fg"><label class="fl">Urgência</label><select class="fc" id="nr-urg"><option value="info">Informativo</option><option value="warn">Atenção</option><option value="danger">Urgente</option></select></div></div>
+        <button class="btn bp w100" onclick="addLembrete()">Salvar Lembrete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CALENDÁRIO -->
+<div class="page" id="page-cal">
+  <div class="g2">
+    <div class="card">
+      <div class="flex ac_ jb mb14"><button class="btn bo bs" onclick="chMonth(-1)">‹</button><span class="st" id="calTitle"></span><button class="btn bo bs" onclick="chMonth(1)">›</button></div>
+      <div id="calGrid"></div>
+    </div>
+    <div><div class="st mb14">Eventos</div><div id="calEvents" style="display:flex;flex-direction:column;gap:8px"></div></div>
+  </div>
+</div>
+
+<!-- CONFIGURAÇÕES -->
+<div class="page" id="page-cfg">
+  <div class="g2">
+    <div class="card">
+      <div class="st mb14">☁ Status da Sincronização</div>
+      <div id="cfgSyncStatus" style="padding:14px;background:var(--sur3);border-radius:var(--r);font-size:14px;margin-bottom:16px"></div>
+      <div class="fg"><label class="fl">Project URL</label><input class="fc" id="cfgUrl" placeholder="https://xxxxxxxxxxx.supabase.co"></div>
+      <div class="fg"><label class="fl">Anon Public Key</label><input class="fc" id="cfgKey" placeholder="eyJ..."></div>
+      <div class="flex gap8 wrap mb12">
+        <button class="btn bp" onclick="reconfig()">☁ Reconectar</button>
+        <button class="btn bo" onclick="forcePull()">⬇ Puxar da Nuvem</button>
+        <button class="btn bo" onclick="forcePush()">⬆ Enviar para Nuvem</button>
+      </div>
+      <div id="cfgStatus2" style="font-size:13px;margin-bottom:8px"></div>
+      <div style="border-top:1px solid var(--bor);padding-top:14px;margin-top:8px">
+        <div class="st mb10">📤 Compartilhar com outros dispositivos</div>
+        <p style="font-size:13px;color:var(--t2);margin-bottom:12px;line-height:1.6">Clique abaixo para baixar o HTML já com as credenciais embutidas. Envie esse arquivo para qualquer pessoa — ao abrir, conecta automaticamente.</p>
+        <button class="btn bp w100" onclick="saveHtml()">⬇ Baixar HTML Configurado para Compartilhar</button>
+      </div>
+    </div>
+    <div class="card">
+      <div class="st mb14">💾 Backup de Dados</div>
+      <p style="font-size:14px;color:var(--t2);margin-bottom:14px;line-height:1.6">Exporte os dados como .json para backup de segurança ou importação manual.</p>
+      <div class="flex col gap10 mb20">
+        <button class="btn bp w100" onclick="exportData()">⬇ Exportar Dados (.json)</button>
+        <label class="btn bo w100" style="cursor:pointer;justify-content:center">⬆ Importar Dados (.json)<input type="file" accept=".json" style="display:none" onchange="importData(event)"></label>
+      </div>
+      <div style="border-top:1px solid var(--bor);padding-top:14px">
+        <div class="st mb10" style="color:var(--da)">⚠ Zona de Perigo</div>
+        <button class="btn bd w100" onclick="if(confirm('APAGAR TODOS OS DADOS?'))clearAll()">🗑 Apagar Todos os Dados</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div></main>
+<div id="toast"></div>
+
+<!-- ══════════ MODALS ══════════ -->
+
+<!-- EMP -->
+<div class="mo" id="mo-emp" onclick="if(event.target===this)closeM('emp')">
+<div class="md"><div class="md-handle"></div>
+  <button class="mc" onclick="closeM('emp')">✕</button>
+  <div class="mt" id="empMT">Novo Empreendimento</div>
+  <input type="hidden" id="emp-id">
+  <div class="g2 gap10"><div class="fg"><label class="fl">Nome *</label><input class="fc" id="emp-nome" placeholder="Nome"></div><div class="fg"><label class="fl">Status</label><select class="fc" id="emp-status"><option>Ativo</option><option>Planejamento</option><option>Pausado</option><option>Concluído</option></select></div></div>
+  <div class="fg"><label class="fl">Endereço</label><input class="fc" id="emp-end" placeholder="Rua, número – Bairro, Cidade, UF"></div>
+  <div class="g3 gap10">
+    <div class="fg"><label class="fl">Unidades</label><input type="number" class="fc" id="emp-uni" placeholder="0" min="0"></div>
+    <div class="fg"><label class="fl">Blocos</label><input type="number" class="fc" id="emp-blo" placeholder="0" min="0"></div>
+    <div class="fg"><label class="fl">Pavimentos</label><input type="number" class="fc" id="emp-pav" placeholder="0" min="0"></div>
+  </div>
+  <div class="fg"><label class="fl">Engenheiro Responsável</label><input class="fc" id="emp-eng" placeholder="Nome completo"></div>
+  <div class="fg"><label class="fl">Descrição</label><textarea class="fc" id="emp-desc"></textarea></div>
+  <div class="flex gap10 jb mt14 wrap">
+    <div class="flex gap8"><button class="btn bd bs" id="emp-del" style="display:none" onclick="deleteEmp()">🗑 Excluir</button><button class="btn bo bs" id="emp-dup" style="display:none" onclick="dupEmp()">⧉ Duplicar</button></div>
+    <div class="flex gap8"><button class="btn bo" onclick="closeM('emp')">Cancelar</button><button class="btn bp" onclick="saveEmp()">Salvar</button></div>
+  </div>
+</div>
+</div>
+
+<!-- TAREFA -->
+<div class="mo" id="mo-t" onclick="if(event.target===this)closeM('t')">
+<div class="md"><div class="md-handle"></div>
+  <button class="mc" onclick="closeM('t')">✕</button>
+  <div class="mt" id="tMT">Nova Tarefa</div>
+  <input type="hidden" id="t-eid"><input type="hidden" id="t-etapa"><input type="hidden" id="t-idx"><input type="hidden" id="t-didx">
+  <div class="g2 gap10"><div class="fg"><label class="fl">Nome *</label><input class="fc" id="t-nome" placeholder="Nome da tarefa"></div><div class="fg"><label class="fl">Status</label><select class="fc" id="t-status"><option>Não Iniciado</option><option>Em Andamento</option><option>Pausado</option><option>Concluído</option><option>Não se Aplica</option></select></div></div>
+  <div class="g2 gap10"><div class="fg"><label class="fl">Responsável</label><input class="fc" id="t-resp" placeholder="Nome"></div><div class="fg"><label class="fl">Prioridade</label><select class="fc" id="t-prio"><option>Alta</option><option>Média</option><option>Baixa</option></select></div></div>
+  <div id="tOG" class="fg"><label class="fl">Órgão</label>
+    <select class="fc" id="t-orgao"><option value="">— Selecione —</option><option>Prefeitura</option><option>Meio Ambiente</option><option>COMDEP</option><option>IPHAN</option><option>ENEL / Light</option><option>Águas do Imperador / Águas da Imperatriz</option><option>CPTRANS</option><option>Cartório</option><option>Bombeiros</option><option>APA</option><option>UNEA</option><option>INEPAC</option><option>CIA Imobiliária</option><option>DNIT</option></select>
+  </div>
+  <div id="tPG" class="fg"><label class="fl">Número do Processo</label><input class="fc" id="t-proc" placeholder="Ex: 2025/000123"></div>
+  <div id="tJG" class="fg" style="display:none"><label class="fl">Projetista / Responsável Técnico</label><input class="fc" id="t-proj" placeholder="Escritório ou profissional"></div>
+  <div id="tDG" class="fg" style="display:none"><label class="fl">Disciplina</label><select class="fc" id="t-disc"></select></div>
+  <div class="g3 gap10">
+    <div class="fg"><label class="fl">Início</label><input type="date" class="fc" id="t-inicio"></div>
+    <div class="fg"><label class="fl">Prazo</label><input type="date" class="fc" id="t-prazo"></div>
+    <div class="fg"><label class="fl">Conclusão</label><input type="date" class="fc" id="t-conclusao"></div>
+  </div>
+  <div id="tVG" class="g2 gap10">
+    <div class="fg"><label class="fl">Validade</label><input type="date" class="fc" id="t-validade"></div>
+    <div class="fg"><label class="fl">Lembrete</label><select class="fc" id="t-lembrete"><option>Sem lembrete</option><option>7 dias antes</option><option>15 dias antes</option><option>30 dias antes</option></select></div>
+  </div>
+  <div class="fg"><label class="fl">Descrição</label><textarea class="fc" id="t-desc"></textarea></div>
+  <div class="fg"><label class="fl">Arquivo</label>
+    <div class="uz" onclick="this.querySelector('input').click()">📎 Toque para anexar<input type="file" style="display:none" multiple onchange="hf(this,'t-arq')"></div>
+    <div id="t-arq" style="font-size:12px;color:var(--ac);margin-top:4px"></div>
+  </div>
+  <div class="flex gap10 jb mt14 wrap">
+    <div class="flex gap8"><button class="btn bd bs" id="t-del" style="display:none" onclick="delT()">🗑</button><button class="btn bo bs" id="t-dup" style="display:none" onclick="dupTM()">⧉</button></div>
+    <div class="flex gap8"><button class="btn bo" onclick="closeM('t')">Cancelar</button><button class="btn bp" onclick="saveT()">Salvar</button></div>
+  </div>
+</div>
+</div>
+
+<!-- DISC -->
+<div class="mo" id="mo-disc" onclick="if(event.target===this)closeM('disc')">
+<div class="md" style="max-width:420px"><div class="md-handle"></div>
+  <button class="mc" onclick="closeM('disc')">✕</button>
+  <div class="mt" id="discMT">Nova Disciplina</div>
+  <input type="hidden" id="disc-idx">
+  <div class="fg"><label class="fl">Nome *</label><input class="fc" id="disc-nome" placeholder="Ex: Arquitetura, Estrutural..."></div>
+  <div class="flex gap10 jb mt14">
+    <div class="flex gap8"><button class="btn bd bs" id="disc-del" style="display:none" onclick="delDisc()">🗑</button><button class="btn bo bs" id="disc-dup" style="display:none" onclick="dupDiscM()">⧉</button></div>
+    <div class="flex gap8"><button class="btn bo" onclick="closeM('disc')">Cancelar</button><button class="btn bp" onclick="saveDisc()">Salvar</button></div>
+  </div>
+</div>
+</div>
+
+<!-- DOC MODAL -->
+<div class="mo" id="mo-doc" onclick="if(event.target===this)closeM('doc')">
+<div class="md"><div class="md-handle"></div>
+  <button class="mc" onclick="closeM('doc')">&#x2715;</button>
+  <div class="mt" id="docMT">Documentação</div>
+  <input type="hidden" id="doc-idx">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="fg"><label class="fl">Nome da Tarefa *</label><input class="fc" id="doc-nome" placeholder="Ex: Projeto Estrutural"></div>
+    <div class="fg"><label class="fl">Status</label><select class="fc" id="doc-status"><option>Não Iniciado</option><option>Em Andamento</option><option>Pausado</option><option>Concluído</option><option>Não se Aplica</option></select></div>
+  </div>
+  <div class="fg"><label class="fl">Projetista / Escritório</label><input class="fc" id="doc-proj" placeholder="Nome do projetista ou escritório"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="fg"><label class="fl">Cotação</label><select class="fc" id="doc-cot"><option>Pendente</option><option>Recebida</option><option>Aprovada</option></select></div>
+    <div class="fg"><label class="fl">Proposta</label><select class="fc" id="doc-prop"><option>Pendente</option><option>Enviada</option><option>Aprovada</option></select></div>
+  </div>
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="fg"><label class="fl">Contrato</label><select class="fc" id="doc-cont"><option>Pendente</option><option>Elaborado</option><option>Assinado</option></select></div>
+    <div class="fg"><label class="fl">Declaração</label><select class="fc" id="doc-decl"><option>Pendente</option><option>Emitida</option><option>Arquivada</option></select></div>
+  </div>
+  <div class="fg"><label class="fl">Avaliação do Projetista</label>
+    <div style="display:flex;gap:8px;margin-top:4px" id="docStars">
+      <span onclick="setDocStar(1)" style="font-size:28px;cursor:pointer;line-height:1">&#9734;</span>
+      <span onclick="setDocStar(2)" style="font-size:28px;cursor:pointer;line-height:1">&#9734;</span>
+      <span onclick="setDocStar(3)" style="font-size:28px;cursor:pointer;line-height:1">&#9734;</span>
+      <span onclick="setDocStar(4)" style="font-size:28px;cursor:pointer;line-height:1">&#9734;</span>
+      <span onclick="setDocStar(5)" style="font-size:28px;cursor:pointer;line-height:1">&#9734;</span>
+    </div>
+    <input type="hidden" id="doc-av" value="0">
+  </div>
+  <div class="fg"><label class="fl">Anexo</label>
+    <div class="uz" onclick="this.querySelector('input').click()">Toque para anexar arquivo<input type="file" style="display:none" multiple onchange="document.getElementById('doc-anexo-label').textContent=Array.from(this.files).map(f=>f.name).join(', ')"></div>
+    <div id="doc-anexo-label" style="font-size:12px;color:var(--ac);margin-top:4px"></div>
+    <input type="hidden" id="doc-anexo">
+  </div>
+  <div class="flex gap10 jb mt14 wrap">
+    <div class="flex gap8"><button class="btn bd bs" id="doc-del" style="display:none" onclick="delDoc()">Excluir</button><button class="btn bo bs" id="doc-dup" style="display:none" onclick="dupDoc()">Duplicar</button></div>
+    <div class="flex gap8"><button class="btn bo" onclick="closeM('doc')">Cancelar</button><button class="btn bp" onclick="saveDoc()">Salvar</button></div>
+  </div>
+</div>
+</div>
+<!-- AVAL MODAL -->
+<div class="mo" id="mo-aval" onclick="if(event.target===this)closeM('aval')">
+<div class="md"><div class="md-handle"></div>
+  <button class="mc" onclick="closeM('aval')">&#x2715;</button>
+  <div class="mt" id="avalMT">Nova Avaliação</div>
+  <input type="hidden" id="aval-idx">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+    <div class="fg"><label class="fl">Nome da Obra *</label><input class="fc" id="aval-obra" placeholder="Ex: Residencial Solar"></div>
+    <div class="fg"><label class="fl">Disciplina *</label><input class="fc" id="aval-disc" placeholder="Ex: Estrutural, Elétrico..."></div>
+  </div>
+  <div class="fg"><label class="fl">Projetista / Empresa *</label><input class="fc" id="aval-proj" placeholder="Nome do projetista ou empresa"></div>
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px">
+    <div class="fg">
+      <label class="fl">Técnica</label>
+      <div style="display:flex;gap:4px;margin-top:6px" id="avalStarsTec">
+        <span onclick="setAvalStar('tec',1)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('tec',2)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('tec',3)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('tec',4)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('tec',5)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+      </div>
+      <input type="hidden" id="aval-tec" value="0">
+    </div>
+    <div class="fg">
+      <label class="fl">Prazo</label>
+      <div style="display:flex;gap:4px;margin-top:6px" id="avalStarsPrz">
+        <span onclick="setAvalStar('prz',1)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('prz',2)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('prz',3)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('prz',4)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('prz',5)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+      </div>
+      <input type="hidden" id="aval-prz" value="0">
+    </div>
+    <div class="fg">
+      <label class="fl">Atendimento</label>
+      <div style="display:flex;gap:4px;margin-top:6px" id="avalStarsAtd">
+        <span onclick="setAvalStar('atd',1)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('atd',2)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('atd',3)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('atd',4)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+        <span onclick="setAvalStar('atd',5)" style="font-size:26px;cursor:pointer;line-height:1;color:#D5D3CB">&#9734;</span>
+      </div>
+      <input type="hidden" id="aval-atd" value="0">
+    </div>
+  </div>
+  <div class="fg"><label class="fl">Conclusão</label>
+    <select class="fc" id="aval-conc">
+      <option>Em Andamento</option><option>Concluído</option><option>Cancelado</option>
+    </select>
+  </div>
+  <div class="fg"><label class="fl">Descrição / Observações</label><textarea class="fc" id="aval-desc" placeholder="Comentários sobre a qualidade do trabalho, pontos positivos, negativos..."></textarea></div>
+  <div class="flex gap10 jb mt14 wrap">
+    <div class="flex gap8">
+      <button class="btn bd bs" id="aval-del" style="display:none" onclick="delAval()">🗑 Excluir</button>
+      <button class="btn bo bs" id="aval-dup" style="display:none" onclick="dupAval()">⧉ Duplicar</button>
+    </div>
+    <div class="flex gap8">
+      <button class="btn bo" onclick="closeM('aval')">Cancelar</button>
+      <button class="btn bp" onclick="saveAval()">Salvar</button>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+'use strict';
+
+// ══════════════════════════════════════════════
+// CHECKLISTS
+// ══════════════════════════════════════════════
+const CHK_ANTE_DISC=['Arquitetura','Estrutural','Elétrico / SPDA','Hidráulico','Esgoto / Drenagem','Ar Condicionado'];
+const CHK_ANTE_TASKS=['Projeto Fundação','Projeto Estrutura','Projeto Elétrico','Projeto SPDA','Projeto Ancoragem','Projeto Hidráulico','Projeto Esgoto','Projeto Drenagem','Projeto Especiais','Projeto Ar Condicionado','Projeto Enel'];
+const CHK_EXEC=['Projeto Fundação','Projeto Estrutura','Projeto Elétrico','Projeto SPDA','Projeto Ancoragem','Projeto Hidráulico','Projeto Esgoto','Projeto Drenagem','Projeto Especiais','Projeto Ar Condicionado','Projeto Enel'];
+const CHK_LEG=['Simples Aprovação – Arquitetura','Projeto de Drenagem','Projeto Movimentação de Terras','Projeto Demolição','Projeto Desmembramento','Aprovação Final – Arquitetura','Estudo de Impacto de Vizinhança'];
+const CHK_DOC=['Projeto Fundação','Projeto Estrutura','Projeto Elétrico','Projeto SPDA','Projeto Ancoragem','Projeto Hidráulico','Projeto Esgoto','Projeto Drenagem','Projeto Especiais','Projeto Ar Condicionado','Projeto Enel'];
+const CHK_OBRA=['Obra – Projeto Canteiro','Obra – Projeto de Escoramento','Obra – Projeto de Elétrica de Canteiro','Obra – Projeto de Fundação da Grua','Obra – Projeto de Andaime e Proteções Coletivas','Sondagem'];
+
+// ══════════════════════════════════════════════
+// CONSTANTS
+// ══════════════════════════════════════════════
+const SBG={'Concluído':'#E5F5ED','Em Andamento':'#FEF0E0','Pausado':'#F0EBF9','Não Iniciado':'#EEEDE8','Não se Aplica':'#F2F2EC'};
+const STC={'Concluído':'#186835','Em Andamento':'#7A4200','Pausado':'#422878','Não Iniciado':'#55544F','Não se Aplica':'#91908A'};
+const SP={'Concluído':'ps','Em Andamento':'pw','Pausado':'pp','Não Iniciado':'pn','Não se Aplica':'pa','Aprovada':'ps','Recebida':'pi','Enviada':'pi','Pendente':'pn','Elaborado':'pw','Assinado':'ps','Emitida':'pi','Arquivada':'ps'};
+const ESC={'Ativo':'ps','Planejamento':'pi','Pausado':'pp','Concluído':'ps'};
+const PC={'Alta':'pra','Média':'prm','Baixa':'prb'};
+
+// ══════════════════════════════════════════════
+// DATA
+// ══════════════════════════════════════════════
+const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+const dc=o=>JSON.parse(JSON.stringify(o));
+const mkT=n=>({id:uid(),nome:n,status:'Não Iniciado',resp:'',prio:'Alta',orgao:'',proc:'',proj:'',inicio:'',prazo:'',conclusao:'',validade:'',lembrete:'Sem lembrete',desc:'',arquivo:''});
+const mkDoc=n=>({id:uid(),nome:n,status:'Não Iniciado',proj:'',cot:'Pendente',prop:'Pendente',cont:'Pendente',decl:'Pendente',anexo:'',av:0});
+const mkChk=ns=>ns.map(mkT);
+function mkEmp(){
+  return{
+    id:uid(),nome:'',status:'Planejamento',endereco:'',unidades:0,blocos:0,pavimentos:0,engenheiro:'',desc:'',
+    legalizacao:mkChk(CHK_LEG),
+    anteprojeto:CHK_ANTE_DISC.map(n=>({nome:n,tarefas:[]})),
+    executivo:mkChk(CHK_EXEC),
+    documentacao:CHK_DOC.map(mkDoc),
+    obra:mkChk(CHK_OBRA),
+    comercial:[],
+    avaliacoes:[]
+  };
+}
+
+let DB={emps:[],lembretes:[],calM:new Date().getMonth(),calY:new Date().getFullYear(),curEmpId:null,curTab:'dash'};
+let CFG={url:'',key:''};
+let _syncQ=null,_curPage='home',_lastTS='',_pulling=false,_ready=false;
+
+// ══════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════
+const sp=s=>`<span class="pill ${SP[s]||'pn'}">${s||'—'}</span>`;
+const pp=p=>p?`<span class="${PC[p]||''}">${p.toUpperCase()}</span>`:'—';
+const fd=d=>{if(!d)return'—';try{const[y,m,dd]=d.split('-');return`${dd}/${m}/${y}`}catch{return d}};
+const ddiff=d=>{if(!d)return 9999;try{return Math.ceil((new Date(d)-new Date())/864e5)}catch{return 9999}};
+const pcolor=n=>n>=80?'var(--ac)':n>=50?'var(--wa)':'var(--da)';
+const pct=a=>{if(!a||!a.length)return 0;return Math.round(a.filter(t=>t.status==='Concluído'||t.status==='Não se Aplica').length/a.length*100)};
+const hf=(i,l)=>{document.getElementById(l).textContent=Array.from(i.files).map(f=>f.name).join(', ')||''};
+
+function toast(msg,clr){
+  const el=document.getElementById('toast');
+  el.textContent=msg;el.style.background=clr||'#181816';
+  el.classList.add('show');clearTimeout(toast._t);
+  toast._t=setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+const curEmp=()=>DB.emps.find(e=>e.id===DB.curEmpId)||null;
+
+function empAllT(e){
+  return[
+    ...e.legalizacao.map(t=>({...t,etapa:'Legalização',empNome:e.nome,empId:e.id})),
+    ...(e.anteprojeto||[]).flatMap(d=>(d.tarefas||[]).map(t=>({...t,etapa:'Anteprojeto',empNome:e.nome,empId:e.id}))),
+    ...e.executivo.map(t=>({...t,etapa:'Proj. Executivo',empNome:e.nome,empId:e.id})),
+    ...e.documentacao.map(t=>({...t,etapa:'Documentação',empNome:e.nome,empId:e.id})),
+    ...e.obra.map(t=>({...t,etapa:'Obra',empNome:e.nome,empId:e.id})),
+    ...(e.comercial||[]).map(t=>({...t,etapa:'Comercial',empNome:e.nome,empId:e.id}))
+  ];
+}
+const allT=()=>DB.emps.flatMap(empAllT);
+
+function setSS(s,msg){
+  document.getElementById('syncDot').className='sync-dot '+s;
+  document.getElementById('syncMsg').textContent=msg;
+}
+
+// ══════════════════════════════════════════════
+// MOBILE SIDEBAR
+// ══════════════════════════════════════════════
+function openSb(){document.getElementById('sidebar').classList.add('open');document.getElementById('sbOverlay').classList.add('show');}
+function closeSb(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sbOverlay').classList.remove('show');}
+
+// ══════════════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════════════
+const LS='solaDB_v7';
+
+function saveLocal(){
+  try{localStorage.setItem(LS,JSON.stringify({db:DB,cfg:CFG}));}
+  catch(e){}
+}
+
+function loadLocal(){
+  try{
+    const r=localStorage.getItem(LS);
+    if(!r)return;
+    const p=JSON.parse(r);
+    if(p.db)DB=p.db;
+    if(p.cfg&&p.cfg.url)CFG=p.cfg;
+  }catch(e){}
+}
+
+function migrate(){
+  if(!DB.emps)DB.emps=[];
+  if(!DB.lembretes)DB.lembretes=[];
+  if(DB.calM===undefined||DB.calM===null)DB.calM=new Date().getMonth();
+  if(!DB.calY)DB.calY=new Date().getFullYear();
+  DB.emps.forEach(e=>{
+    if(!e.comercial||!Array.isArray(e.comercial))e.comercial=[];
+    if(!e.avaliacoes)e.avaliacoes=[];
+    if(!e.legalizacao||!e.legalizacao.length)e.legalizacao=mkChk(CHK_LEG);
+    if(!e.executivo||!e.executivo.length)e.executivo=mkChk(CHK_EXEC);
+    if(!e.documentacao||!e.documentacao.length){e.documentacao=CHK_DOC.map(mkDoc);}
+    // Migrate old documentacao items
+    e.documentacao.forEach(d=>{if(!d.id)d.id=uid();if(d.cot===undefined)d.cot='Pendente';if(d.prop===undefined)d.prop='Pendente';if(d.cont===undefined)d.cont='Pendente';if(d.decl===undefined)d.decl='Pendente';if(d.av===undefined)d.av=0;if(d.anexo===undefined)d.anexo=d.arquivo||'';});
+    if(!e.obra||!e.obra.length)e.obra=mkChk(CHK_OBRA);
+    if(!e.anteprojeto||!e.anteprojeto.length){
+      e.anteprojeto=typeof CHK_ANTE_DISC!=='undefined'?CHK_ANTE_DISC.map(n=>({nome:n,tarefas:[]})):[];
+    }
+    ['legalizacao','executivo','documentacao','obra','comercial'].forEach(k=>{
+      if(Array.isArray(e[k]))e[k].forEach(t=>{if(!t.id)t.id=uid();});
+    });
+  });
+}
+
+// ══════════════════════════════════════════════
+// SUPABASE — CORE
+// ══════════════════════════════════════════════
+function sbHeaders(){
+  return{
+    'Content-Type':'application/json',
+    'apikey':CFG.key,
+    'Authorization':'Bearer '+CFG.key,
+    'X-Client-Info':'sola-construtora'
+  };
+}
+function sbFetch(url, opts){
+  return fetch(url, {
+    ...opts,
+    mode:'cors',
+    headers:{...sbHeaders(), ...(opts.headers||{})}
+  });
+}
+
+async function pushCloud(){
+  if(!CFG.url||!CFG.key){saveLocal();return;}
+  setSS('syncing','Salvando...');
+  const payload={id:'main',data:JSON.parse(JSON.stringify(DB)),updated_at:new Date().toISOString()};
+  try{
+    const res=await sbFetch(CFG.url+'/rest/v1/sola_data',{
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body:JSON.stringify(payload)
+    });
+    if(!res.ok){const t=await res.text().catch(()=>'');throw new Error(`${res.status}: ${t.slice(0,120)}`);}
+    _lastTS=payload.updated_at;
+    setSS('ok','Salvo ✓ '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+    saveLocal();
+    updateCfgStatusPage();
+  }catch(err){
+    console.error('pushCloud:',err.message);
+    setSS('err','Erro ao salvar — '+err.message.slice(0,50));
+    saveLocal();
+  }
+}
+
+async function pullCloud(){
+  if(!CFG.url||!CFG.key||_pulling)return false;
+  _pulling=true;
+  try{
+    const res=await sbFetch(CFG.url+'/rest/v1/sola_data?id=eq.main&select=data,updated_at',{
+      method:'GET',
+      headers:{'Cache-Control':'no-cache'}
+    });
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    const rows=await res.json();
+    _pulling=false;
+    if(!rows||!rows.length||!rows[0].data)return false;
+    const ts=rows[0].updated_at||'';
+    if(ts&&ts===_lastTS)return false;
+    _lastTS=ts;
+    const cloud=rows[0].data;
+    if(cloud&&Array.isArray(cloud.emps)){
+      DB=cloud;migrate();saveLocal();
+      setSS('ok','Sincronizado ✓ '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'}));
+      return true;
+    }
+    return false;
+  }catch(err){
+    console.error('pullCloud:',err.message);
+    setSS('err','Sem conexão com a nuvem');
+    _pulling=false;
+    return false;
+  }
+}
+
+function save(){
+  saveLocal();
+  clearTimeout(_syncQ);
+  _syncQ=setTimeout(pushCloud,500);
+  renderNotifs();
+}
+
+async function forcePull(){
+  setSS('syncing','Puxando...');
+  const ok=await pullCloud();
+  if(ok){migrate();renderAll();renderSidebar();toast('☁ Dados atualizados da nuvem','#2C5F3F');}
+  else toast('Nenhuma mudança ou sem conexão.','#C9700A');
+}
+async function forcePush(){await pushCloud();toast('⬆ Dados enviados para a nuvem','#2C5F3F');}
+
+let _pollTimer=null;
+function startPoll(){
+  clearInterval(_pollTimer);
+  if(!CFG.url||!CFG.key)return;
+  _pollTimer=setInterval(async()=>{
+    const ok=await pullCloud();
+    if(ok){migrate();renderAll();renderSidebar();}
+  },10000);
+}
+
+// ══════════════════════════════════════════════
+// SETUP SCREEN
+// ══════════════════════════════════════════════
+async function doSetup(){
+  const url=(document.getElementById('setup-url').value||'').trim().replace(/\/+$/,'');
+  const key=(document.getElementById('setup-key').value||'').trim();
+  const btn=document.getElementById('setup-btn');
+  const status=document.getElementById('setup-status');
+  if(!url||!key){status.textContent='Preencha os dois campos.';status.style.color='var(--da)';return;}
+  btn.disabled=true;status.style.color='var(--wa)';status.textContent='Testando conexão...';
+  try{
+    // Test connection
+    const res=await fetch(url+'/rest/v1/sola_data?select=id&limit=1',{
+      method:'GET',
+      mode:'cors',
+      headers:{'apikey':key,'Authorization':'Bearer '+key,'Cache-Control':'no-cache','X-Client-Info':'sola-construtora'}
+    });
+    if(!res.ok)throw new Error('Erro HTTP '+res.status+'. Verifique URL e Key.');
+    // Save config
+    CFG={url,key};saveLocal();
+    status.style.color='var(--ac)';status.textContent='Conectado! Carregando dados...';
+    // Push local data then pull cloud
+    await pushCloud();
+    const pulled=await pullCloud();
+    if(pulled)migrate();
+    // Hide setup, start app
+    document.getElementById('setupScreen').classList.add('hidden');
+    _ready=true;
+    renderSidebar();renderAll();renderNotifs();startPoll();
+    toast('✅ Conectado ao Supabase! Dados sincronizados.','#2C5F3F');
+  }catch(err){
+    status.style.color='var(--da)';
+    status.textContent='Erro: '+err.message;
+    btn.disabled=false;
+  }
+}
+
+function skipSetup(){
+  document.getElementById('setupScreen').classList.add('hidden');
+  _ready=true;
+  setSS('local','Sem sincronização — apenas local');
+  renderSidebar();renderAll();renderNotifs();
+}
+
+// ══════════════════════════════════════════════
+// SAVE HTML (with credentials embedded)
+// ══════════════════════════════════════════════
+function saveHtml(){
+  const src=document.documentElement.outerHTML;
+  const inject=`window.SOLA_CFG = {\n  url: '${CFG.url}',\n  key: '${CFG.key}'\n};`;
+  const updated=src.replace(
+    /window\.SOLA_CFG\s*=\s*\{[^}]*\};/,
+    inject
+  );
+  const blob=new Blob([updated],{type:'text/html'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='SolaConstrutora_'+new Date().toISOString().slice(0,10)+'.html';
+  a.click();
+  toast('✅ HTML salvo com credenciais embutidas! Compartilhe este arquivo.','#2C5F3F');
+}
+
+function exportData(){
+  const b=new Blob([JSON.stringify(DB,null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);
+  a.download='sola_dados_'+new Date().toISOString().slice(0,10)+'.json';a.click();
+  toast('✅ Dados exportados!');
+}
+function importData(ev){
+  const f=ev.target.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const p=JSON.parse(e.target.result);
+      if(p.emps)DB=p;else if(p.db)DB=p.db;
+      migrate();save();renderAll();renderSidebar();
+      toast('✅ Dados importados e sincronizados!');
+    }catch(err){toast('❌ Arquivo inválido.','#BE3B2B');}
+  };r.readAsText(f);
+}
+function clearAll(){
+  DB={emps:[],lembretes:[],calM:new Date().getMonth(),calY:new Date().getFullYear(),curEmpId:null,curTab:'dash'};
+  save();renderAll();renderSidebar();toast('Dados apagados');
+}
+
+async function reconfig(){
+  const url=(document.getElementById('cfgUrl').value||'').trim().replace(/\/+$/,'');
+  const key=(document.getElementById('cfgKey').value||'').trim();
+  if(!url||!key){toast('Preencha URL e Key.','#C9700A');return;}
+  CFG={url,key};saveLocal();
+  document.getElementById('cfgStatus2').innerHTML='<span style="color:var(--wa)">Reconectando...</span>';
+  setSS('syncing','Reconectando...');
+  try{
+    const res=await fetch(url+'/rest/v1/sola_data?select=id&limit=1',{method:'GET',mode:'cors',headers:{'apikey':key,'Authorization':'Bearer '+key,'X-Client-Info':'sola-construtora'}});
+    if(!res.ok)throw new Error('HTTP '+res.status);
+    await pushCloud();const ok=await pullCloud();
+    if(ok){migrate();renderAll();renderSidebar();}
+    document.getElementById('cfgStatus2').innerHTML='<span style="color:var(--ac);font-weight:700">✓ Reconectado!</span>';
+    startPoll();toast('✅ Reconectado!','#2C5F3F');
+    updateCfgStatusPage();
+  }catch(err){
+    document.getElementById('cfgStatus2').innerHTML=`<span style="color:var(--da);font-weight:700">✗ ${err.message}</span>`;
+  }
+}
+
+function updateCfgStatusPage(){
+  const el=document.getElementById('cfgSyncStatus');if(!el)return;
+  if(CFG.url&&CFG.key){
+    el.innerHTML=`<span style="color:var(--ac);font-weight:700">✓ Conectado ao Supabase</span><br><span style="font-size:12px;color:var(--t3)">${CFG.url}</span>`;
+    document.getElementById('cfgUrl').value=CFG.url;
+    document.getElementById('cfgKey').value=CFG.key;
+  } else {
+    el.innerHTML='<span style="color:var(--wa)">⚠ Sem configuração de nuvem</span>';
+  }
+}
+
+// ══════════════════════════════════════════════
+// NOTIFICATIONS
+// ══════════════════════════════════════════════
+function buildNotifs(){
+  const list=[...DB.lembretes];
+  allT().forEach(t=>{
+    if(t.validade){const d=ddiff(t.validade);if(d<=30&&d>=0)list.push({tipo:d<=7?'danger':'warn',msg:`"${t.nome}" vence em ${d}d — ${t.etapa}`,data:t.validade});}
+    if(t.prazo&&t.status!=='Concluído'&&t.status!=='Não se Aplica'){const d=ddiff(t.prazo);if(d<=7&&d>=0)list.push({tipo:d<=2?'danger':'warn',msg:`Prazo "${t.nome}" em ${d}d — ${t.etapa}`,data:t.prazo});}
+  });
+  return list;
+}
+function renderNotifs(){
+  const list=buildNotifs();
+  document.getElementById('nbadge').textContent=list.length;
+  const mk=n=>`<div class="nitem ${n.tipo}"><div style="font-size:14px">${n.msg}</div>${n.data?`<div style="font-size:11px;color:var(--t3);margin-top:2px">${fd(n.data)}</div>`:''}</div>`;
+  document.getElementById('notifList').innerHTML=list.length?list.map(mk).join(''):'<div style="color:var(--t3);font-size:14px;text-align:center;padding:28px 0">Sem notificações 👌</div>';
+  const pg=document.getElementById('notifPageList');
+  if(pg)pg.innerHTML=list.length?list.map(n=>`<div class="card card-sm" style="border-left:4px solid var(--${n.tipo==='danger'?'da':n.tipo==='warn'?'wa':'in'})"><div style="font-size:11px;font-weight:800;color:var(--${n.tipo==='danger'?'da':n.tipo==='warn'?'wa':'in'})">${n.tipo.toUpperCase()}</div><div style="font-size:14px;margin-top:4px">${n.msg}</div>${n.data?`<div style="font-size:12px;color:var(--t3);margin-top:2px">${fd(n.data)}</div>`:''}</div>`).join(''):'<div style="color:var(--t3)">Nenhum alerta.</div>';
+  const b=document.getElementById('homeAlertBadge');if(b)b.textContent=list.filter(n=>n.tipo==='danger').length+' urgente(s)';
+}
+function addLembrete(){
+  const desc=document.getElementById('nr-desc').value.trim();if(!desc)return alert('Informe a descrição.');
+  DB.lembretes.push({id:uid(),tipo:document.getElementById('nr-urg').value,msg:document.getElementById('nr-desc').value,data:document.getElementById('nr-data').value});
+  document.getElementById('nr-desc').value='';document.getElementById('nr-data').value='';
+  save();toast('Lembrete salvo!');
+}
+function toggleNotif(){document.getElementById('npanel').classList.toggle('open');}
+
+// ══════════════════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════════════════
+function renderSidebar(){
+  document.getElementById('sbEmps').innerHTML=DB.emps.map(e=>{
+    const p=pct(empAllT(e));
+    return`<div class="sb-emp ${e.id===DB.curEmpId?'active':''}" onclick="openEmp('${e.id}');closeSb()"><div class="sb-dot"></div><span class="sb-name">${e.nome||'Sem nome'}</span><span class="sb-pct">${p}%</span></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════════
+// HOME
+// ══════════════════════════════════════════════
+function renderHome(){
+  const at=allT(),nl=buildNotifs();
+  document.getElementById('homeStats').innerHTML=`
+    <div class="stat"><div class="stat-v">${DB.emps.length}</div><div class="stat-l">Empreendimentos</div></div>
+    <div class="stat"><div class="stat-v" style="color:var(--wa)">${at.filter(t=>t.status==='Em Andamento').length}</div><div class="stat-l">Em Andamento</div></div>
+    <div class="stat"><div class="stat-v" style="color:var(--da)">${nl.filter(n=>n.tipo==='danger').length}</div><div class="stat-l">Alertas Urgentes</div></div>
+    <div class="stat"><div class="stat-v" style="color:var(--ac)">${at.length?pct(at):0}%</div><div class="stat-l">Progresso Geral</div></div>`;
+  document.getElementById('homeEmpList').innerHTML=DB.emps.length?DB.emps.map(e=>{
+    const et=empAllT(e),p=pct(et);
+    return`<div class="flex ac_ gap10" style="padding:10px 0;border-bottom:1px solid #F0EFEA;cursor:pointer" onclick="openEmp('${e.id}')">
+      <div style="width:34px;height:34px;border-radius:8px;background:var(--ac);display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;flex-shrink:0">${(e.nome||'?').split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
+      <div style="flex:1"><div style="font-size:14px;font-weight:700">${e.nome||'Sem nome'}</div><div class="pbar mt8" style="height:4px"><div class="pfill" style="width:${p}%;background:${pcolor(p)}"></div></div></div>
+      <span class="pill ${ESC[e.status]||'pn'}" style="font-size:10px">${e.status}</span>
+      <span style="font-size:14px;font-weight:800;color:${pcolor(p)};min-width:32px;text-align:right">${p}%</span>
+    </div>`;
+  }).join(''):'<div style="color:var(--t3);font-size:14px;padding:14px 0">Nenhum empreendimento.</div>';
+  const al=nl.slice(0,4);
+  document.getElementById('homeAlerts').innerHTML=al.length?al.map(n=>`<div style="padding:9px 12px;background:var(--${n.tipo==='danger'?'dal':n.tipo==='warn'?'wal':'inl'});border-radius:var(--r);border-left:3px solid var(--${n.tipo==='danger'?'da':n.tipo==='warn'?'wa':'in'})"><div style="font-size:11px;font-weight:800;color:var(--${n.tipo==='danger'?'da':n.tipo==='warn'?'wa':'in'})">${n.tipo.toUpperCase()}</div><div style="font-size:14px;margin-top:2px">${n.msg}</div></div>`).join(''):'<div style="color:var(--t3);font-size:14px">Tudo em dia 👌</div>';
+  fHome('');
+}
+function fHome(s,btn){
+  if(btn){btn.closest('#homeFBar').querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+  const rows=allT().filter(t=>!s||t.status===s);
+  document.getElementById('homeTasks').innerHTML=rows.length?rows.map(t=>`
+    <div class="card-row" onclick="openEmp('${t.empId}')">
+      <div class="flex ac_ jb mb8"><span style="font-size:14px;font-weight:700;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.nome}</span>${sp(t.status)}</div>
+      <div class="flex gap6 wrap"><span class="pill pi" style="font-size:10px">${t.etapa}</span><span style="font-size:12px;color:var(--t3)">${t.empNome}</span>${pp(t.prio)}${t.prazo?`<span style="font-size:12px;color:${ddiff(t.prazo)<=7?'var(--da)':ddiff(t.prazo)<=30?'var(--wa)':'var(--t3)'}">${fd(t.prazo)}</span>`:''}</div>
+    </div>`).join(''):'<div style="color:var(--t3);font-size:14px;padding:16px;text-align:center">Nenhuma tarefa.</div>';
+}
+
+// ══════════════════════════════════════════════
+// EMPS GALLERY
+// ══════════════════════════════════════════════
+let _eQ='',_eS='';
+function renderEmpsPage(){
+  let emps=DB.emps;
+  if(_eQ)emps=emps.filter(e=>e.nome.toLowerCase().includes(_eQ));
+  if(_eS)emps=emps.filter(e=>e.status===_eS);
+  document.getElementById('empGrid').innerHTML=emps.length?emps.map(e=>{
+    const et=empAllT(e),p=pct(et);
+    return`<div class="ecard" onclick="openEmp('${e.id}')">
+      <div style="height:76px;background:linear-gradient(135deg,#2C5F3F,#4B9C6A);display:flex;align-items:center;justify-content:center;position:relative">
+        <span style="font-size:34px;font-weight:800;color:rgba(255,255,255,.38);letter-spacing:3px">${(e.nome||'?').split(' ').map(w=>w[0]).slice(0,3).join('')}</span>
+        <span class="pill ${ESC[e.status]||'pn'}" style="position:absolute;top:9px;right:9px">${e.status}</span>
+      </div>
+      <div style="padding:13px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:3px">${e.nome||'Sem nome'}</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px">${e.endereco||'Endereço não informado'}</div>
+        <div class="flex gap12 mb10">
+          <div style="font-size:13px;color:var(--t2)">${e.unidades||0}<span style="display:block;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Unid.</span></div>
+          <div style="font-size:13px;color:var(--t2)">${e.blocos||0}<span style="display:block;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Blocos</span></div>
+          <div style="font-size:13px;color:var(--t2)">${e.pavimentos||0}<span style="display:block;font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:1px">Pav.</span></div>
+        </div>
+        <div class="pbar mb8"><div class="pfill" style="width:${p}%;background:${pcolor(p)}"></div></div>
+        <div class="flex jb" style="font-size:12px;color:var(--t3);margin-bottom:10px"><span>${et.filter(t=>t.status==='Concluído').length}/${et.length} tarefas</span><span style="font-weight:800;color:${pcolor(p)}">${p}%</span></div>
+        <div class="flex gap8">
+          <button class="btn bp bs" style="flex:1" onclick="event.stopPropagation();openEmp('${e.id}')">Abrir →</button>
+          <button class="btn bo bs" onclick="event.stopPropagation();openMEmp('${e.id}')">✏</button>
+          <button class="btn bo bs" onclick="event.stopPropagation();if(confirm('Duplicar empreendimento?'))dupEmpById('${e.id}')">⧉</button>
+        </div>
+      </div>
+    </div>`;
+  }).join(''):'<div style="color:var(--t3);font-size:14px;grid-column:1/-1">Nenhum encontrado.</div>';
+}
+function filterEmps(q){_eQ=q.toLowerCase();renderEmpsPage();}
+function fEmpS(s,btn){_eS=s;btn.closest('#empSF').querySelectorAll('.fb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderEmpsPage();}
+
+// ══════════════════════════════════════════════
+// OPEN EMP / TABS
+// ══════════════════════════════════════════════
+function openEmp(id){
+  DB.curEmpId=id;DB.curTab='dash';
+  save();renderSidebar();
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById('page-emp').classList.add('active');
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  _curPage='emp';
+  const e=curEmp();
+  document.getElementById('tbTitle').textContent=e?e.nome:'—';
+  document.getElementById('tbBread').innerHTML=`<span class="crumb" onclick="goPage('emps')">Empreendimentos</span><span style="opacity:.4"> › </span>`;
+  document.querySelectorAll('.etab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tp').forEach(t=>t.classList.remove('active'));
+  document.querySelector('.etab[data-tab="dash"]').classList.add('active');
+  document.getElementById('tp-dash').classList.add('active');
+  renderEmpHeader();renderEmpDash();updBtn();
+}
+
+function switchTab(tab,el){
+  DB.curTab=tab;
+  document.querySelectorAll('.etab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tp').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('tp-'+tab).classList.add('active');
+  ({dash:renderEmpDash,com:renderCom,leg:renderLeg,ante:renderAnte,exec:renderExec,doc:renderDoc,obra:renderObra,aval:renderAval}[tab]||renderEmpDash)();
+  updBtn();
+}
+function switchTabById(t){const el=document.querySelector(`.etab[data-tab="${t}"]`);if(el)switchTab(t,el);}
+
+function updBtn(){
+  const btn=document.getElementById('tbAction');
+  if(_curPage==='emp'){
+    const tab=DB.curTab;
+    if(tab==='dash'){btn.textContent='✏ Editar';btn.onclick=()=>openMEmp(DB.curEmpId);}
+    else if(tab==='ante'){btn.textContent='＋ Disc.';btn.onclick=()=>openM('disc');}
+    else{btn.textContent='＋ Tarefa';btn.onclick=()=>openMT({com:'comercial',leg:'legalizacao',exec:'executivo',doc:'documentacao',obra:'obra'}[tab]||tab,-1,-1,null);}
+    btn.style.display='';
+  } else if(_curPage==='home'||_curPage==='emps'){btn.textContent='＋ Emp.';btn.onclick=()=>openM('emp');btn.style.display='';}
+  else btn.style.display='none';
+}
+
+// ══════════════════════════════════════════════
+// EMP HEADER
+// ══════════════════════════════════════════════
+function renderEmpHeader(){
+  const e=curEmp();if(!e)return;
+  const at=empAllT(e),p=pct(at);
+  const secs=[
+    {k:'com',l:'Comercial',a:e.comercial||[]},
+    {k:'leg',l:'Legalização',a:e.legalizacao||[]},
+    {k:'ante',l:'Anteprojeto',a:(e.anteprojeto||[]).flatMap(d=>d.tarefas||[])},
+    {k:'exec',l:'Executivo',a:e.executivo||[]},
+    {k:'doc',l:'Documentação',a:e.documentacao||[]},
+    {k:'obra',l:'Obra',a:e.obra||[]},
+    {k:'aval',l:'Avaliações',a:[],count:(e.avaliacoes||[]).length}
+  ];
+  document.getElementById('empHeader').innerHTML=`
+    <div class="card" style="padding:14px 16px">
+      <div class="flex ac_ gap12 wrap">
+        <div style="width:48px;height:48px;border-radius:12px;background:var(--ac);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:800;flex-shrink:0">${(e.nome||'?').split(' ').map(w=>w[0]).slice(0,2).join('')}</div>
+        <div style="flex:1;min-width:130px">
+          <div style="font-size:17px;font-weight:800">${e.nome||'Sem nome'}</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">${e.endereco||'Endereço não informado'}</div>
+          <div class="flex gap6 mt8 wrap">
+            ${e.engenheiro?`<span class="tag"><strong>Eng.:</strong> ${e.engenheiro}</span>`:''}
+            <span class="tag"><strong>Unid.:</strong> ${e.unidades||'—'}</span>
+            <span class="tag"><strong>Blocos:</strong> ${e.blocos||'—'}</span>
+          </div>
+        </div>
+        <div style="text-align:right;flex-shrink:0">
+          <div style="font-size:30px;font-weight:800;color:${pcolor(p)};line-height:1">${p}%</div>
+          <span class="pill ${ESC[e.status]||'pn'}" style="margin-top:6px">${e.status}</span>
+        </div>
+      </div>
+      <div style="display:flex;overflow-x:auto;gap:0;margin-top:12px;padding-top:11px;border-top:1px solid var(--bor);-webkit-overflow-scrolling:touch;scrollbar-width:none">
+        ${secs.map(s=>{const sp=pct(s.a);return`<div style="flex:1;min-width:65px;padding:7px 8px;cursor:pointer;border-radius:var(--r);text-align:center" onclick="switchTabById('${s.k}')">
+          <div style="font-size:15px;font-weight:800;color:${s.count!==undefined?'var(--ac)':pcolor(sp)}">${s.count!==undefined?s.count:sp+'%'}</div>
+          <div style="font-size:9px;letter-spacing:.8px;text-transform:uppercase;color:var(--t3);margin-top:2px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.l}</div>
+          <div class="pbar mt6" style="height:3px"><div class="pfill" style="width:${sp}%;background:${pcolor(sp)}"></div></div>
+        </div>`}).join('')}
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// EMP DASHBOARD
+// ══════════════════════════════════════════════
+function renderEmpDash(){
+  const e=curEmp();if(!e)return;
+  const at=empAllT(e);
+  const secs=[
+    {k:'com',l:'Comercial',a:e.comercial||[]},
+    {k:'leg',l:'Legalização',a:e.legalizacao||[]},
+    {k:'ante',l:'Anteprojeto',a:(e.anteprojeto||[]).flatMap(d=>d.tarefas||[])},
+    {k:'exec',l:'Proj. Executivo',a:e.executivo||[]},
+    {k:'doc',l:'Documentação',a:e.documentacao||[]},
+    {k:'obra',l:'Obra',a:e.obra||[]}
+  ];
+  document.getElementById('tp-dash').innerHTML=`
+    <div class="g3 mb18">
+      ${secs.map(s=>{const p=pct(s.a);return`<div class="stat" style="cursor:pointer" onclick="switchTabById('${s.k}')">
+        <div class="stat-v" style="color:${pcolor(p)}">${p}%</div>
+        <div class="stat-l">${s.l}</div>
+        <div class="pbar mt8"><div class="pfill" style="width:${p}%;background:${pcolor(p)}"></div></div>
+        <div class="stat-s">${s.a.filter(t=>t.status==='Concluído').length}/${s.a.length}</div>
+      </div>`}).join('')}
+    </div>
+    <div class="card">
+      <div class="st mb12">Tarefas Recentes</div>
+      <div class="card-list">
+        ${at.slice(0,10).map(t=>`<div class="card-row">
+          <div class="flex ac_ jb mb6"><span style="font-size:14px;font-weight:700;flex:1">${t.nome}</span>${sp(t.status)}</div>
+          <div class="flex gap6 wrap"><span class="pill pi" style="font-size:10px">${t.etapa}</span>${t.prazo?`<span style="font-size:12px;color:${ddiff(t.prazo)<=7?'var(--da)':ddiff(t.prazo)<=30?'var(--wa)':'var(--t3)'}">${fd(t.prazo)}</span>`:''}</div>
+        </div>`).join('')||'<div style="color:var(--t3);font-size:14px;padding:12px 0">Sem tarefas.</div>'}
+      </div>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════
+// CHECKLIST SHARED RENDERER
+// ══════════════════════════════════════════════
+function renderChk(arr,etapa){
+  if(!arr.length)return'<div style="color:var(--t3);font-size:14px;padding:14px 0;text-align:center">Sem itens. Clique em ＋ Tarefa.</div>';
+  const p=pct(arr);
+  return`<div class="pbar mb14"><div class="pfill" style="width:${p}%;background:${pcolor(p)}"></div></div><div>${arr.map((t,i)=>`
+    <div class="chk-item" onclick="openMT('${etapa}',${i},-1,curEmp().${etapa}[${i}])">
+      <div class="chk-box ${t.status==='Concluído'?'done':''}" onclick="event.stopPropagation();qTog('${etapa}',${i})"></div>
+      <div class="chk-info">
+        <div class="chk-name ${t.status==='Concluído'?'done':''}">${t.nome}</div>
+        <div class="chk-meta">
+          ${sp(t.status)}${t.resp?`<span>${t.resp}</span>`:''}${pp(t.prio)}
+          ${t.prazo?`<span style="color:${ddiff(t.prazo)<=7?'var(--da)':ddiff(t.prazo)<=30?'var(--wa)':'var(--t3)'}">${fd(t.prazo)}</span>`:''}
+          ${t.orgao?`<span class="pill pn" style="font-size:10px">${t.orgao}</span>`:''}
+        </div>
+      </div>
+      <span style="font-size:18px;color:var(--t3);padding:0 4px;flex-shrink:0">›</span>
+    </div>`).join('')}</div>`;
+}
+function qTog(etapa,i){const e=curEmp();if(!e)return;const t=e[etapa][i];t.status=t.status==='Concluído'?'Em Andamento':'Concluído';save();renderCurTab();renderEmpHeader();toast(t.status==='Concluído'?'✓ Concluída':'Reaberta');}
+
+// ══════════════════════════════════════════════
+// ETAPAS
+// ══════════════════════════════════════════════
+// ══ SHARED TABLE HELPERS ══════════════════════════════════════════════════
+const TH_STYLE='padding:10px 13px;font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);text-align:left;border-bottom:1.5px solid var(--bor);background:var(--sur3);white-space:nowrap';
+const TD_STYLE='padding:10px 13px;border-bottom:1px solid #F0EFEA;vertical-align:middle;font-size:13.5px';
+
+function emptyRow(cols){return `<tr><td colspan="${cols}" style="${TD_STYLE};text-align:center;color:var(--t3);padding:28px">Nenhuma tarefa. Clique em <strong>+ Nova Tarefa</strong>.</td></tr>`;}
+function tablWrap(minW,thead,tbody){return`<div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)"><div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="width:100%;border-collapse:collapse;min-width:${minW}px"><thead>${thead}</thead><tbody>${tbody}</tbody></table></div></div>`;}
+function etapaHeader(arr,addFn,extraBtn){const p=pct(arr);const done=arr.filter(t=>t.status==='Concluído').length;return `<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px"><div style="display:flex;align-items:center;gap:12px"><div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:22px;font-weight:800;color:${pcolor(p)};line-height:1">${p}%</span><span style="font-size:13px;color:var(--t3);font-weight:600">concluído</span></div><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:120px;background:#E8E7E0;border-radius:4px;overflow:hidden"><div style="height:100%;width:${p}%;background:${pcolor(p)};border-radius:4px;transition:width .4s"></div></div><span style="font-size:12px;color:var(--t3)">${done}/${arr.length}</span></div></div><div style="display:flex;gap:8px;align-items:center">${extraBtn||''}<button class="btn bp" style="padding:8px 16px;font-size:13px" onclick="${addFn}">+ Nova Tarefa</button></div></div>`;}
+function statusCell(status,oc){const bg={'Concluído':'#E5F5ED','Em Andamento':'#FFF3E0','Pausado':'#F3E8FF','Não Iniciado':'#F3F3EF','Não se Aplica':'#F5F5F5'};const tc={'Concluído':'#166534','Em Andamento':'#92400E','Pausado':'#5B21B6','Não Iniciado':'#6B6B63','Não se Aplica':'#9C9C96'};const s=status||'Não Iniciado';return `<select onclick="event.stopPropagation()" onchange="${oc}" style="border:none;border-radius:20px;padding:5px 10px;font-family:var(--f);font-size:11.5px;font-weight:700;cursor:pointer;outline:none;-webkit-appearance:none;appearance:none;background:${bg[s]||'#F3F3EF'};color:${tc[s]||'#6B6B63'};min-height:28px">${['Não Iniciado','Em Andamento','Pausado','Concluído','Não se Aplica'].map(o=>`<option ${o===s?'selected':''}>${o}</option>`).join('')}</select>`;}
+function prioCell(p){const clr={Alta:'#BE3B2B',Média:'#C9700A',Baixa:'#2C5F3F'};return p?`<span style="font-size:11.5px;font-weight:800;color:${clr[p]||'var(--t3)'}">${p.toUpperCase()}</span>`:'<span style="color:var(--t3)">—</span>';}
+function dateCell(d){if(!d)return'<span style="color:var(--t3)">—</span>';const diff=ddiff(d);const clr=diff<=7?'var(--da)':diff<=30?'var(--wa)':'var(--t)';return `<span style="color:${clr};font-weight:${diff<=30?700:400};font-size:13px">${fd(d)}${diff<=7?' ⚠':''}</span>`;}
+function docPill(v){const cfg={'Pendente':['#F3F3EF','#9C9C96'],'Recebida':['#E3EEF6','#0C3A5E'],'Enviada':['#E3EEF6','#0C3A5E'],'Aprovada':['#E5F5ED','#166534'],'Elaborado':['#FFF3E0','#92400E'],'Assinado':['#E5F5ED','#166534'],'Emitida':['#E3EEF6','#0C3A5E'],'Arquivada':['#E5F5ED','#166534']};const val=v||'Pendente';const[bg,tc]=cfg[val]||['#F3F3EF','#9C9C96'];return `<span style="display:inline-block;padding:3px 9px;border-radius:20px;font-size:11px;font-weight:700;background:${bg};color:${tc};white-space:nowrap">${val}</span>`;}
+function starStr(n){if(!n)return'<span style="color:var(--t3)">—</span>';return Array.from({length:5},(_,i)=>`<span style="color:${i<n?'#F5A623':'#D5D3CB'};font-size:15px">${i<n?'★':'☆'}</span>`).join('');}
+
+function qTogDoc(i){const e=curEmp();if(!e)return;const t=e.documentacao[i];t.status=t.status==='Concluído'?'Não Iniciado':'Concluído';save();renderDoc();renderEmpHeader();toast(t.status==='Concluído'?'✓ Concluída':'Reaberta');}
+function openDocModal(idx){const e=curEmp();if(!e)return;const isNew=idx<0;const t=isNew?null:e.documentacao[idx];document.getElementById('docMT').textContent=isNew?'Nova Documentação':'Editar Documentação';document.getElementById('doc-idx').value=idx;document.getElementById('doc-nome').value=t?t.nome||'':'';document.getElementById('doc-status').value=t?t.status||'Não Iniciado':'Não Iniciado';document.getElementById('doc-proj').value=t?t.proj||'':'';document.getElementById('doc-cot').value=t?t.cot||'Pendente':'Pendente';document.getElementById('doc-prop').value=t?t.prop||'Pendente':'Pendente';document.getElementById('doc-cont').value=t?t.cont||'Pendente':'Pendente';document.getElementById('doc-decl').value=t?t.decl||'Pendente':'Pendente';document.getElementById('doc-av').value=t?t.av||0:0;document.getElementById('doc-anexo').value=t?t.anexo||'':'';document.getElementById('doc-anexo-label').textContent=t&&t.anexo?t.anexo:'';setDocStar(t?t.av||0:0);document.getElementById('doc-del').style.display=isNew?'none':'';document.getElementById('doc-dup').style.display=isNew?'none':'';document.getElementById('mo-doc').classList.add('open');}
+function setDocStar(n){document.getElementById('doc-av').value=n;document.querySelectorAll('#docStars span').forEach((s,i)=>{s.textContent=i<n?'★':'☆';s.style.color=i<n?'#F5A623':'';});}
+function saveDoc(){const nome=document.getElementById('doc-nome').value.trim();if(!nome)return alert('Informe o nome.');const e=curEmp();if(!e)return;const idx=parseInt(document.getElementById('doc-idx').value);const isNew=idx<0||isNaN(idx);const anexo=document.getElementById('doc-anexo-label').textContent||document.getElementById('doc-anexo').value||'';const obj={id:isNew?uid():(e.documentacao[idx]?.id||uid()),nome,status:document.getElementById('doc-status').value,proj:document.getElementById('doc-proj').value,cot:document.getElementById('doc-cot').value,prop:document.getElementById('doc-prop').value,cont:document.getElementById('doc-cont').value,decl:document.getElementById('doc-decl').value,av:parseInt(document.getElementById('doc-av').value)||0,anexo};if(!e.documentacao)e.documentacao=[];if(isNew)e.documentacao.push(obj);else e.documentacao[idx]=obj;closeM('doc');save();renderDoc();renderEmpHeader();toast('Documentação salva');}
+function delDoc(){if(!confirm('Excluir?'))return;const e=curEmp();if(!e)return;e.documentacao.splice(parseInt(document.getElementById('doc-idx').value),1);closeM('doc');save();renderDoc();renderEmpHeader();toast('Excluído');}
+function dupDoc(){const e=curEmp();if(!e)return;const idx=parseInt(document.getElementById('doc-idx').value);const cp=dc(e.documentacao[idx]);cp.id=uid();cp.nome+=' (Cópia)';e.documentacao.splice(idx+1,0,cp);closeM('doc');save();renderDoc();renderEmpHeader();toast('Duplicado');}
+
+// ── COMERCIAL ─────────────────────────────────────────────────────────────
+function renderCom(){
+  const e=curEmp();if(!e)return;const arr=e.comercial||[];
+  const th=`<tr><th style="${TH_STYLE};width:36px"></th><th style="${TH_STYLE}">Tarefa</th><th style="${TH_STYLE}">Status</th><th style="${TH_STYLE}">Responsável</th><th style="${TH_STYLE}">Prioridade</th><th style="${TH_STYLE}">Início</th><th style="${TH_STYLE}">Prazo</th><th style="${TH_STYLE}">Conclusão</th><th style="${TH_STYLE}">Descrição</th></tr>`;
+  const tb=arr.length?arr.map((t,i)=>`<tr onclick="openMT('comercial',${i},-1,curEmp().comercial[${i}])" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()"><div class="chk-box ${t.status==='Concluído'?'done':''}" style="width:20px;height:20px;margin:0;flex-shrink:0" onclick="event.stopPropagation();qTog('comercial',${i})"></div></td>
+    <td style="${TD_STYLE};font-weight:700;min-width:150px">${t.nome}</td>
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()">${statusCell(t.status,`curEmp().comercial[${i}].status=this.value;save();renderCom();renderEmpHeader()`)}</td>
+    <td style="${TD_STYLE};min-width:110px">${t.resp||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${prioCell(t.prio)}</td>
+    <td style="${TD_STYLE}">${t.inicio?fd(t.inicio):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${dateCell(t.prazo)}</td>
+    <td style="${TD_STYLE}">${t.conclusao?fd(t.conclusao):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE};max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc||'<span style="color:var(--t3)">—</span>'}</td>
+  </tr>`).join(''): emptyRow(9);
+  document.getElementById('tp-com').innerHTML=etapaHeader(arr,"openMT('comercial',-1,-1,null)")+tablWrap(650,th,tb);
+}
+
+// ── LEGALIZAÇÃO ───────────────────────────────────────────────────────────
+function renderLeg(){
+  const e=curEmp();if(!e)return;const arr=e.legalizacao||[];
+  const th=`<tr><th style="${TH_STYLE};width:36px"></th><th style="${TH_STYLE}">Tarefa</th><th style="${TH_STYLE}">Status</th><th style="${TH_STYLE}">Responsável</th><th style="${TH_STYLE}">Órgão</th><th style="${TH_STYLE}">Prioridade</th><th style="${TH_STYLE}">Nº Processo</th><th style="${TH_STYLE}">Início</th><th style="${TH_STYLE}">Prazo</th><th style="${TH_STYLE}">Conclusão</th><th style="${TH_STYLE}">Validade</th><th style="${TH_STYLE}">Descrição</th><th style="${TH_STYLE}">Arquivo</th></tr>`;
+  const tb=arr.length?arr.map((t,i)=>`<tr onclick="openMT('legalizacao',${i},-1,curEmp().legalizacao[${i}])" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()"><div class="chk-box ${t.status==='Concluído'?'done':''}" style="width:20px;height:20px;margin:0;flex-shrink:0" onclick="event.stopPropagation();qTog('legalizacao',${i})"></div></td>
+    <td style="${TD_STYLE};font-weight:700;min-width:180px">${t.nome}</td>
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()">${statusCell(t.status,`curEmp().legalizacao[${i}].status=this.value;save();renderLeg();renderEmpHeader()`)}</td>
+    <td style="${TD_STYLE};min-width:110px">${t.resp||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE};min-width:130px;font-size:12.5px">${t.orgao||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${prioCell(t.prio)}</td>
+    <td style="${TD_STYLE};min-width:100px;font-size:12.5px">${t.proc||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${t.inicio?fd(t.inicio):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${dateCell(t.prazo)}</td>
+    <td style="${TD_STYLE}">${t.conclusao?fd(t.conclusao):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${dateCell(t.validade)}</td>
+    <td style="${TD_STYLE};max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE};text-align:center">${t.arquivo?'<span style="color:var(--in)">📎</span>':'<span style="color:var(--t3)">—</span>'}</td>
+  </tr>`).join(''): emptyRow(13);
+  document.getElementById('tp-leg').innerHTML=etapaHeader(arr,"openMT('legalizacao',-1,-1,null)")+tablWrap(1050,th,tb);
+}
+
+// ── ANTEPROJETO ───────────────────────────────────────────────────────────
+function renderAnte(){
+  const e=curEmp();if(!e)return;
+  if(!e.anteprojeto)e.anteprojeto=[];
+  const allT=e.anteprojeto.flatMap(d=>d.tarefas||[]);
+  const p=pct(allT);const done=allT.filter(t=>t.status==='Concluído').length;
+  const tHead=`<tr><th style="${TH_STYLE};width:36px"></th><th style="${TH_STYLE}">Tarefa</th><th style="${TH_STYLE}">Status</th><th style="${TH_STYLE}">Projetista</th><th style="${TH_STYLE}">Prioridade</th><th style="${TH_STYLE}">Início</th><th style="${TH_STYLE}">Prazo</th><th style="${TH_STYLE}">Conclusão</th><th style="${TH_STYLE}">Descrição</th><th style="${TH_STYLE};width:60px"></th></tr>`;
+  const discs=e.anteprojeto.length?e.anteprojeto.map((d,di)=>{
+    const arr=d.tarefas||[];const dp=pct(arr);const ddone=arr.filter(t=>t.status==='Concluído').length;
+    const rows=arr.length?arr.map((t,ti)=>`<tr onclick="openMT('anteprojeto',${ti},${di},curEmp().anteprojeto[${di}].tarefas[${ti}])" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+      <td style="${TD_STYLE}" onclick="event.stopPropagation()"><div class="chk-box ${t.status==='Concluído'?'done':''}" style="width:20px;height:20px;margin:0;flex-shrink:0" onclick="event.stopPropagation();qTogA(${di},${ti})"></div></td>
+      <td style="${TD_STYLE};font-weight:700;min-width:170px">${t.nome}</td>
+      <td style="${TD_STYLE}" onclick="event.stopPropagation()">${statusCell(t.status,`curEmp().anteprojeto[${di}].tarefas[${ti}].status=this.value;save();renderAnte();renderEmpHeader()`)}</td>
+      <td style="${TD_STYLE};min-width:130px">${t.proj||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_STYLE}">${prioCell(t.prio)}</td>
+      <td style="${TD_STYLE}">${t.inicio?fd(t.inicio):'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_STYLE}">${dateCell(t.prazo)}</td>
+      <td style="${TD_STYLE}">${t.conclusao?fd(t.conclusao):'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_STYLE};max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_STYLE}"><button class="btn bo bxs" onclick="event.stopPropagation();openMT('anteprojeto',${ti},${di},curEmp().anteprojeto[${di}].tarefas[${ti}])">✏</button></td>
+    </tr>`).join(''):`<tr><td colspan="10" style="${TD_STYLE};text-align:center;color:var(--t3);padding:18px">Sem tarefas — clique em + Tarefa</td></tr>`;
+    return `<div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);overflow:hidden;margin-bottom:12px;box-shadow:0 1px 3px rgba(0,0,0,.04)">
+      <div style="padding:13px 16px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;background:var(--sur3);border-bottom:1px solid var(--bor);cursor:pointer;user-select:none" onclick="const b=this.nextElementSibling;b.style.display=b.style.display==='none'?'block':'none'">
+        <div style="display:flex;align-items:center;gap:10px"><span style="font-size:15px;font-weight:800">${d.nome}</span><span style="font-size:12px;color:var(--t3);background:var(--sur2);padding:2px 9px;border-radius:20px">${ddone}/${arr.length}</span></div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div style="display:flex;align-items:center;gap:6px"><div style="height:5px;width:80px;background:#E8E7E0;border-radius:4px;overflow:hidden"><div style="height:100%;width:${dp}%;background:${pcolor(dp)};border-radius:4px"></div></div><span style="font-size:13px;font-weight:800;color:${pcolor(dp)}">${dp}%</span></div>
+          <button class="btn bo bxs" onclick="event.stopPropagation();openEditDisc(${di})">✏ Disc.</button>
+          <button class="btn bp bxs" onclick="event.stopPropagation();openAddToDisc(${di})">+ Tarefa</button>
+        </div>
+      </div>
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch"><table style="width:100%;border-collapse:collapse;min-width:780px"><thead>${tHead}</thead><tbody>${rows}</tbody></table></div>
+    </div>`;
+  }).join(''):`<div style="text-align:center;color:var(--t3);padding:32px;background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl)">Sem disciplinas. Clique em + Disciplina.</div>`;
+  document.getElementById('tp-ante').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px">
+      <div style="display:flex;align-items:center;gap:12px"><div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:22px;font-weight:800;color:${pcolor(p)};line-height:1">${p}%</span><span style="font-size:13px;color:var(--t3);font-weight:600">concluído</span></div><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:120px;background:#E8E7E0;border-radius:4px;overflow:hidden"><div style="height:100%;width:${p}%;background:${pcolor(p)};border-radius:4px;transition:width .4s"></div></div><span style="font-size:12px;color:var(--t3)">${done}/${allT.length}</span></div></div>
+      <div style="display:flex;gap:8px"><button class="btn bo" style="padding:8px 14px;font-size:13px" onclick="openM('disc')">+ Disciplina</button><button class="btn bp" style="padding:8px 16px;font-size:13px" onclick="openMT('anteprojeto',-1,-1,null)">+ Nova Tarefa</button></div>
+    </div>
+    ${discs}`;
+}
+
+// ── PROJ. EXECUTIVO ───────────────────────────────────────────────────────
+function renderExec(){
+  const e=curEmp();if(!e)return;const arr=e.executivo||[];
+  const th=`<tr><th style="${TH_STYLE};width:36px"></th><th style="${TH_STYLE}">Tarefa</th><th style="${TH_STYLE}">Status</th><th style="${TH_STYLE}">Projetista</th><th style="${TH_STYLE}">Prioridade</th><th style="${TH_STYLE}">Início</th><th style="${TH_STYLE}">Prazo</th><th style="${TH_STYLE}">Conclusão</th><th style="${TH_STYLE}">Descrição</th><th style="${TH_STYLE};width:60px"></th></tr>`;
+  const tb=arr.length?arr.map((t,i)=>`<tr onclick="openMT('executivo',${i},-1,curEmp().executivo[${i}])" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()"><div class="chk-box ${t.status==='Concluído'?'done':''}" style="width:20px;height:20px;margin:0;flex-shrink:0" onclick="event.stopPropagation();qTog('executivo',${i})"></div></td>
+    <td style="${TD_STYLE};font-weight:700;min-width:170px">${t.nome}</td>
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()">${statusCell(t.status,`curEmp().executivo[${i}].status=this.value;save();renderExec();renderEmpHeader()`)}</td>
+    <td style="${TD_STYLE};min-width:130px">${t.proj||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${prioCell(t.prio)}</td>
+    <td style="${TD_STYLE}">${t.inicio?fd(t.inicio):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${dateCell(t.prazo)}</td>
+    <td style="${TD_STYLE}">${t.conclusao?fd(t.conclusao):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE};max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}"><button class="btn bo bxs" onclick="event.stopPropagation();openMT('executivo',${i},-1,curEmp().executivo[${i}])">✏</button></td>
+  </tr>`).join(''): emptyRow(10);
+  document.getElementById('tp-exec').innerHTML=etapaHeader(arr,"openMT('executivo',-1,-1,null)")+tablWrap(780,th,tb);
+}
+
+// ── DOCUMENTAÇÃO ──────────────────────────────────────────────────────────
+function renderDoc(){
+  const e=curEmp();if(!e)return;const arr=e.documentacao||[];const p=pct(arr);
+  const th=`<tr><th style="${TH_STYLE};width:36px"></th><th style="${TH_STYLE}">Nome da Tarefa</th><th style="${TH_STYLE}">Status</th><th style="${TH_STYLE}">Projetista</th><th style="${TH_STYLE}">Cotação</th><th style="${TH_STYLE}">Proposta</th><th style="${TH_STYLE}">Contrato</th><th style="${TH_STYLE}">Declaração</th><th style="${TH_STYLE}">Anexo</th><th style="${TH_STYLE}">Avaliação</th><th style="${TH_STYLE};width:50px"></th></tr>`;
+  const tb=arr.length?arr.map((t,i)=>`<tr onclick="openDocModal(${i})" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()"><div class="chk-box ${t.status==='Concluído'?'done':''}" style="width:20px;height:20px;margin:0;flex-shrink:0" onclick="event.stopPropagation();qTogDoc(${i})"></div></td>
+    <td style="${TD_STYLE};font-weight:700;min-width:160px">${t.nome}</td>
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()">${statusCell(t.status,`curEmp().documentacao[${i}].status=this.value;save();renderDoc();renderEmpHeader()`)}</td>
+    <td style="${TD_STYLE};min-width:130px">${t.proj||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${docPill(t.cot)}</td>
+    <td style="${TD_STYLE}">${docPill(t.prop)}</td>
+    <td style="${TD_STYLE}">${docPill(t.cont)}</td>
+    <td style="${TD_STYLE}">${docPill(t.decl)}</td>
+    <td style="${TD_STYLE};text-align:center">${t.anexo?`<span style="color:var(--in);font-size:15px" title="${t.anexo}">📎</span>`:'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${starStr(t.av)}</td>
+    <td style="${TD_STYLE}"><button class="btn bo bxs" onclick="event.stopPropagation();openDocModal(${i})">✏</button></td>
+  </tr>`).join(''):`<tr><td colspan="11" style="${TD_STYLE};text-align:center;color:var(--t3);padding:28px">Nenhuma documentação. Clique em <strong>+ Nova</strong>.</td></tr>`;
+  document.getElementById('tp-doc').innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:14px"><div style="display:flex;align-items:center;gap:12px"><div style="display:flex;align-items:baseline;gap:6px"><span style="font-size:22px;font-weight:800;color:${pcolor(p)};line-height:1">${p}%</span><span style="font-size:13px;color:var(--t3);font-weight:600">concluído</span></div><div style="display:flex;align-items:center;gap:6px"><div style="height:6px;width:120px;background:#E8E7E0;border-radius:4px;overflow:hidden"><div style="height:100%;width:${p}%;background:${pcolor(p)};border-radius:4px;transition:width .4s"></div></div><span style="font-size:12px;color:var(--t3)">${arr.filter(t=>t.status==='Concluído').length}/${arr.length}</span></div></div><button class="btn bp" style="padding:8px 16px;font-size:13px" onclick="openDocModal(-1)">+ Nova</button></div>${tablWrap(1050,th,tb)}`;
+}
+
+// ── OBRA ──────────────────────────────────────────────────────────────────
+function renderObra(){
+  const e=curEmp();if(!e)return;const arr=e.obra||[];
+  const th=`<tr><th style="${TH_STYLE};width:36px"></th><th style="${TH_STYLE}">Tarefa</th><th style="${TH_STYLE}">Status</th><th style="${TH_STYLE}">Responsável</th><th style="${TH_STYLE}">Prioridade</th><th style="${TH_STYLE}">Início</th><th style="${TH_STYLE}">Prazo</th><th style="${TH_STYLE}">Conclusão</th><th style="${TH_STYLE}">Descrição</th><th style="${TH_STYLE};width:60px"></th></tr>`;
+  const tb=arr.length?arr.map((t,i)=>`<tr onclick="openMT('obra',${i},-1,curEmp().obra[${i}])" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()"><div class="chk-box ${t.status==='Concluído'?'done':''}" style="width:20px;height:20px;margin:0;flex-shrink:0" onclick="event.stopPropagation();qTog('obra',${i})"></div></td>
+    <td style="${TD_STYLE};font-weight:700;min-width:170px">${t.nome}</td>
+    <td style="${TD_STYLE}" onclick="event.stopPropagation()">${statusCell(t.status,`curEmp().obra[${i}].status=this.value;save();renderObra();renderEmpHeader()`)}</td>
+    <td style="${TD_STYLE};min-width:130px">${t.proj||t.resp||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${prioCell(t.prio)}</td>
+    <td style="${TD_STYLE}">${t.inicio?fd(t.inicio):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}">${dateCell(t.prazo)}</td>
+    <td style="${TD_STYLE}">${t.conclusao?fd(t.conclusao):'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE};max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.desc||'<span style="color:var(--t3)">—</span>'}</td>
+    <td style="${TD_STYLE}"><button class="btn bo bxs" onclick="event.stopPropagation();openMT('obra',${i},-1,curEmp().obra[${i}])">✏</button></td>
+  </tr>`).join(''): emptyRow(10);
+  document.getElementById('tp-obra').innerHTML=etapaHeader(arr,"openMT('obra',-1,-1,null)")+tablWrap(780,th,tb);
+}
+
+
+// ══ AVALIAÇÃO DE PROJETISTAS ═══════════════════════════════════════════════
+
+function mkAval(){return{id:uid(),obra:'',disc:'',proj:'',tec:0,prz:0,atd:0,conc:'Em Andamento',desc:'',media:0};}
+
+function calcMedia(tec,prz,atd){
+  const vals=[tec,prz,atd].filter(v=>v>0);
+  if(!vals.length)return 0;
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10)/10;
+}
+
+function avalStarStr(n,max){
+  if(!n)return'<span style="color:var(--t3)">—</span>';
+  return Array.from({length:max||5},(_,i)=>`<span style="color:${i<n?'#F5A623':'#D5D3CB'};font-size:14px">${i<n?'★':'☆'}</span>`).join('');
+}
+
+function medalhaColor(m){
+  if(m>=4.5)return{bg:'#E5F5ED',tc:'#166534',label:'Excelente'};
+  if(m>=3.5)return{bg:'#FFF3E0',tc:'#92400E',label:'Bom'};
+  if(m>=2.5)return{bg:'#FFF8E1',tc:'#6D4C00',label:'Regular'};
+  if(m>0)return{bg:'var(--dal)',tc:'var(--da)',label:'Insuficiente'};
+  return{bg:'#F3F3EF',tc:'#9C9C96',label:'—'};
+}
+
+function renderAval(){
+  const e=curEmp();if(!e)return;
+  if(!e.avaliacoes)e.avaliacoes=[];
+  const arr=e.avaliacoes;
+  const TH_S='padding:10px 13px;font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);text-align:left;border-bottom:1.5px solid var(--bor);background:var(--sur3);white-space:nowrap';
+  const TD_S='padding:10px 13px;border-bottom:1px solid #F0EFEA;vertical-align:middle;font-size:13.5px';
+  const thead=`<tr>
+    <th style="${TH_S}">Nome da Obra</th>
+    <th style="${TH_S}">Disciplina</th>
+    <th style="${TH_S}">Projetista / Empresa</th>
+    <th style="${TH_S}">Técnica</th>
+    <th style="${TH_S}">Prazo</th>
+    <th style="${TH_S}">Atendimento</th>
+    <th style="${TH_S}">Média</th>
+    <th style="${TH_S}">Conclusão</th>
+    <th style="${TH_S}">Descrição</th>
+    <th style="${TH_S};width:50px"></th>
+  </tr>`;
+  const concPill=(v)=>{const cfg={Concluído:['#E5F5ED','#166534'],'Em Andamento':['#FFF3E0','#92400E'],Cancelado:['var(--dal)','var(--da)']};const[bg,tc]=cfg[v]||['#F3F3EF','#9C9C96'];return`<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${bg};color:${tc};white-space:nowrap">${v||'—'}</span>`;};
+  const tbody=arr.length?arr.map((a,i)=>{
+    const med=calcMedia(a.tec,a.prz,a.atd);
+    const mc=medalhaColor(med);
+    return`<tr onclick="openAvalModal(${i})" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+      <td style="${TD_S};font-weight:700;min-width:150px">${a.obra||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S};min-width:120px">${a.disc||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S};min-width:150px;font-weight:600">${a.proj||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S}">${avalStarStr(a.tec,5)}</td>
+      <td style="${TD_S}">${avalStarStr(a.prz,5)}</td>
+      <td style="${TD_S}">${avalStarStr(a.atd,5)}</td>
+      <td style="${TD_S}"><span style="display:inline-block;padding:4px 11px;border-radius:20px;font-size:13px;font-weight:800;background:${mc.bg};color:${mc.tc};min-width:50px;text-align:center">${med>0?med.toFixed(1):'—'}</span></td>
+      <td style="${TD_S}">${concPill(a.conc)}</td>
+      <td style="${TD_S};max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(a.desc||'').replace(/"/g,'')}">${a.desc||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S}"><button class="btn bo bxs" onclick="event.stopPropagation();openAvalModal(${i})">✏</button></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="10" style="${TD_S};text-align:center;color:var(--t3);padding:32px">Nenhuma avaliação. Clique em <strong>+ Nova Avaliação</strong>.</td></tr>`;
+
+  // Summary cards by projetista
+  const byProj={};
+  arr.forEach(a=>{if(!a.proj)return;if(!byProj[a.proj])byProj[a.proj]={nome:a.proj,items:[],discs:new Set()};byProj[a.proj].items.push(a);byProj[a.proj].discs.add(a.disc);});
+  const summaryCards=Object.values(byProj).sort((a,b)=>{const ma=calcMedia(...a.items.flatMap(x=>[x.tec,x.prz,x.atd]).filter((_,i)=>i%3===0?x:null));return 0;}).map(p=>{
+    const medias=p.items.map(a=>calcMedia(a.tec,a.prz,a.atd)).filter(m=>m>0);
+    const med=medias.length?Math.round(medias.reduce((a,b)=>a+b,0)/medias.length*10)/10:0;
+    const mc=medalhaColor(med);
+    const tec=p.items.map(a=>a.tec).filter(v=>v>0);const prz=p.items.map(a=>a.prz).filter(v=>v>0);const atd=p.items.map(a=>a.atd).filter(v=>v>0);
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length*10)/10:0;
+    return`<div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:160px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:3px">${p.nome}</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px">${[...p.discs].join(' · ')} · ${p.items.length} avaliação(ões)</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <div style="font-size:12px;color:var(--t2)"><span style="font-weight:700">Técnica:</span> ${avalStarStr(Math.round(avg(tec)),5)} <span style="color:var(--t3)">${avg(tec).toFixed(1)}</span></div>
+          <div style="font-size:12px;color:var(--t2)"><span style="font-weight:700">Prazo:</span> ${avalStarStr(Math.round(avg(prz)),5)} <span style="color:var(--t3)">${avg(prz).toFixed(1)}</span></div>
+          <div style="font-size:12px;color:var(--t2)"><span style="font-weight:700">Atendimento:</span> ${avalStarStr(Math.round(avg(atd)),5)} <span style="color:var(--t3)">${avg(atd).toFixed(1)}</span></div>
+        </div>
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div style="font-size:32px;font-weight:800;color:${mc.tc};line-height:1">${med>0?med.toFixed(1):'—'}</div>
+        <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${mc.tc};margin-top:3px;padding:2px 8px;background:${mc.bg};border-radius:20px">${mc.label}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('tp-aval').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span style="font-size:22px;font-weight:800;line-height:1">${arr.length}</span>
+        <span style="font-size:13px;color:var(--t3);font-weight:600">avaliações registradas</span>
+      </div>
+      <button class="btn bp" style="padding:8px 16px;font-size:13px" onclick="openAvalModal(-1)">+ Nova Avaliação</button>
+    </div>
+    ${Object.keys(byProj).length?`<div style="margin-bottom:20px"><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:12px">Ranking de Projetistas</div><div style="display:flex;flex-direction:column;gap:10px">${summaryCards}</div></div>`:''}
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:12px">Todas as Avaliações</div>
+    <div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table style="width:100%;border-collapse:collapse;min-width:950px"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+      </div>
+    </div>`;
+}
+
+function openAvalModal(idx){
+  const e=curEmp();if(!e)return;
+  const isNew=idx<0;const a=isNew?null:e.avaliacoes[idx];
+  document.getElementById('avalMT').textContent=isNew?'Nova Avaliação':'Editar Avaliação';
+  document.getElementById('aval-idx').value=idx;
+  document.getElementById('aval-obra').value=a?a.obra||e.nome||'':e.nome||'';
+  document.getElementById('aval-disc').value=a?a.disc||'':'';
+  document.getElementById('aval-proj').value=a?a.proj||'':'';
+  document.getElementById('aval-conc').value=a?a.conc||'Em Andamento':'Em Andamento';
+  document.getElementById('aval-desc').value=a?a.desc||'':'';
+  setAvalStar('tec',a?a.tec||0:0);
+  setAvalStar('prz',a?a.prz||0:0);
+  setAvalStar('atd',a?a.atd||0:0);
+  document.getElementById('aval-del').style.display=isNew?'none':'';
+  document.getElementById('aval-dup').style.display=isNew?'none':'';
+  document.getElementById('mo-aval').classList.add('open');
+}
+
+function setAvalStar(field,n){
+  const ids={tec:'avalStarsTec',prz:'avalStarsPrz',atd:'avalStarsAtd'};
+  const inputIds={tec:'aval-tec',prz:'aval-prz',atd:'aval-atd'};
+  document.getElementById(inputIds[field]).value=n;
+  document.querySelectorAll('#'+ids[field]+' span').forEach((s,i)=>{
+    s.textContent=i<n?'★':'☆';
+    s.style.color=i<n?'#F5A623':'#D5D3CB';
+  });
+}
+
+function saveAval(){
+  const obra=document.getElementById('aval-obra').value.trim();
+  const disc=document.getElementById('aval-disc').value.trim();
+  const proj=document.getElementById('aval-proj').value.trim();
+  if(!obra||!disc||!proj)return alert('Informe Nome da Obra, Disciplina e Projetista.');
+  const e=curEmp();if(!e)return;
+  if(!e.avaliacoes)e.avaliacoes=[];
+  const idx=parseInt(document.getElementById('aval-idx').value);const isNew=idx<0||isNaN(idx);
+  const tec=parseInt(document.getElementById('aval-tec').value)||0;
+  const prz=parseInt(document.getElementById('aval-prz').value)||0;
+  const atd=parseInt(document.getElementById('aval-atd').value)||0;
+  const obj={
+    id:isNew?uid():(e.avaliacoes[idx]?.id||uid()),
+    obra,disc,proj,tec,prz,atd,
+    media:calcMedia(tec,prz,atd),
+    conc:document.getElementById('aval-conc').value,
+    desc:document.getElementById('aval-desc').value
+  };
+  if(isNew)e.avaliacoes.push(obj);else e.avaliacoes[idx]=obj;
+  closeM('aval');save();renderAval();
+  toast('Avaliação salva');
+}
+
+function delAval(){
+  if(!confirm('Excluir esta avaliação?'))return;
+  const e=curEmp();if(!e)return;
+  e.avaliacoes.splice(parseInt(document.getElementById('aval-idx').value),1);
+  closeM('aval');save();renderAval();toast('Excluído');
+}
+
+function dupAval(){
+  const e=curEmp();if(!e)return;
+  const idx=parseInt(document.getElementById('aval-idx').value);
+  const cp=dc(e.avaliacoes[idx]);cp.id=uid();cp.proj+=' (Cópia)';
+  e.avaliacoes.splice(idx+1,0,cp);
+  closeM('aval');save();renderAval();toast('Duplicado');
+}
+
+function renderCurTab(){({dash:renderEmpDash,com:renderCom,leg:renderLeg,ante:renderAnte,exec:renderExec,doc:renderDoc,obra:renderObra}[DB.curTab]||renderEmpDash)();}
+function qTogA(di,ti){const e=curEmp();if(!e)return;const t=e.anteprojeto[di].tarefas[ti];t.status=t.status==='Concluído'?'Em Andamento':'Concluído';save();renderCurTab();renderEmpHeader();toast(t.status==='Concluído'?'✓ Concluída':'Reaberta');}
+function openEditDisc(di){const e=curEmp();if(!e)return;document.getElementById('disc-idx').value=di;document.getElementById('disc-nome').value=e.anteprojeto[di].nome;document.getElementById('discMT').textContent='Editar Disciplina';document.getElementById('disc-del').style.display='';document.getElementById('disc-dup').style.display='';document.getElementById('mo-disc').classList.add('open');}
+function openAddToDisc(di){openMT('anteprojeto',-1,-1,null);document.getElementById('tDG').style.display='';document.getElementById('tJG').style.display='';document.getElementById('t-disc').value=di;}
+function qDup(etapa,i){const e=curEmp();if(!e)return;const cp=dc(e[etapa][i]);cp.id=uid();cp.nome+=' (Cópia)';e[etapa].splice(i+1,0,cp);save();renderCurTab();renderEmpHeader();toast('Duplicada');}
+function qDupA(di,ti){const e=curEmp();if(!e)return;const cp=dc(e.anteprojeto[di].tarefas[ti]);cp.id=uid();cp.nome+=' (Cópia)';e.anteprojeto[di].tarefas.splice(ti+1,0,cp);save();renderCurTab();renderEmpHeader();toast('Duplicada');}
+function qDupDisc(di){const e=curEmp();if(!e)return;const cp=dc(e.anteprojeto[di]);(cp.tarefas||[]).forEach(t=>t.id=uid());cp.nome+=' (Cópia)';e.anteprojeto.splice(di+1,0,cp);save();renderCurTab();renderEmpHeader();toast('Duplicada');}
+function dupDiscM(){const di=parseInt(document.getElementById('disc-idx').value);closeM('disc');qDupDisc(di);}
+function dupEmpById(id){const e=DB.emps.find(x=>x.id===id);if(!e)return;const cp=dc(e);cp.id=uid();cp.nome+=' (Cópia)';['legalizacao','executivo','documentacao','obra','comercial'].forEach(k=>(cp[k]||[]).forEach(t=>t.id=uid()));DB.emps.push(cp);DB.curEmpId=cp.id;save();renderSidebar();openEmp(cp.id);toast('Empreendimento duplicado');}
+function updBtn(){const btn=document.getElementById('tbAction');if(_curPage==='emp'){const tab=DB.curTab;if(tab==='dash'){btn.textContent='Editar';btn.onclick=()=>openMEmp(DB.curEmpId);}else if(tab==='ante'){btn.textContent='+ Disc.';btn.onclick=()=>openM('disc');}else if(tab==='doc'){btn.textContent='+ Nova';btn.onclick=()=>openDocModal(-1);}else if(tab==='aval'){btn.textContent='+ Nova Avaliação';btn.onclick=()=>openAvalModal(-1);}else{btn.textContent='+ Nova Tarefa';btn.onclick=()=>openMT({com:'comercial',leg:'legalizacao',exec:'executivo',obra:'obra'}[tab]||tab,-1,-1,null);}btn.style.display='';}else if(_curPage==='home'||_curPage==='emps'){btn.textContent='+ Emp.';btn.onclick=()=>openM('emp');btn.style.display='';}else btn.style.display='none';}
+
+
+function qDup(etapa,i){const e=curEmp();if(!e)return;const c=dc(e[etapa][i]);c.id=uid();c.nome+=' (Cópia)';e[etapa].splice(i+1,0,c);save();renderCurTab();renderEmpHeader();toast('⧉ Duplicada');}
+function qDupA(di,ti){const e=curEmp();if(!e)return;const c=dc(e.anteprojeto[di].tarefas[ti]);c.id=uid();c.nome+=' (Cópia)';e.anteprojeto[di].tarefas.splice(ti+1,0,c);save();renderCurTab();renderEmpHeader();toast('⧉ Duplicada');}
+function qDupDisc(di){const e=curEmp();if(!e)return;const c=dc(e.anteprojeto[di]);(c.tarefas||[]).forEach(t=>t.id=uid());c.nome+=' (Cópia)';e.anteprojeto.splice(di+1,0,c);save();renderCurTab();renderEmpHeader();toast('⧉ Duplicada');}
+function dupEmpById(id){const e=DB.emps.find(x=>x.id===id);if(!e)return;const c=dc(e);c.id=uid();c.nome+=' (Cópia)';['legalizacao','executivo','documentacao','obra','comercial'].forEach(k=>(c[k]||[]).forEach(t=>t.id=uid()));DB.emps.push(c);DB.curEmpId=c.id;save();renderSidebar();openEmp(c.id);toast('⧉ Empreendimento duplicado');}
+
+// ══ AVALIAÇÃO DE PROJETISTAS ═══════════════════════════════════════════════
+
+function mkAval(){return{id:uid(),obra:'',disc:'',proj:'',tec:0,prz:0,atd:0,conc:'Em Andamento',desc:'',media:0};}
+
+function calcMedia(tec,prz,atd){
+  const vals=[tec,prz,atd].filter(v=>v>0);
+  if(!vals.length)return 0;
+  return Math.round(vals.reduce((a,b)=>a+b,0)/vals.length*10)/10;
+}
+
+function avalStarStr(n,max){
+  if(!n)return'<span style="color:var(--t3)">—</span>';
+  return Array.from({length:max||5},(_,i)=>`<span style="color:${i<n?'#F5A623':'#D5D3CB'};font-size:14px">${i<n?'★':'☆'}</span>`).join('');
+}
+
+function medalhaColor(m){
+  if(m>=4.5)return{bg:'#E5F5ED',tc:'#166534',label:'Excelente'};
+  if(m>=3.5)return{bg:'#FFF3E0',tc:'#92400E',label:'Bom'};
+  if(m>=2.5)return{bg:'#FFF8E1',tc:'#6D4C00',label:'Regular'};
+  if(m>0)return{bg:'var(--dal)',tc:'var(--da)',label:'Insuficiente'};
+  return{bg:'#F3F3EF',tc:'#9C9C96',label:'—'};
+}
+
+function renderAval(){
+  const e=curEmp();if(!e)return;
+  if(!e.avaliacoes)e.avaliacoes=[];
+  const arr=e.avaliacoes;
+  const TH_S='padding:10px 13px;font-size:10.5px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--t3);text-align:left;border-bottom:1.5px solid var(--bor);background:var(--sur3);white-space:nowrap';
+  const TD_S='padding:10px 13px;border-bottom:1px solid #F0EFEA;vertical-align:middle;font-size:13.5px';
+  const thead=`<tr>
+    <th style="${TH_S}">Nome da Obra</th>
+    <th style="${TH_S}">Disciplina</th>
+    <th style="${TH_S}">Projetista / Empresa</th>
+    <th style="${TH_S}">Técnica</th>
+    <th style="${TH_S}">Prazo</th>
+    <th style="${TH_S}">Atendimento</th>
+    <th style="${TH_S}">Média</th>
+    <th style="${TH_S}">Conclusão</th>
+    <th style="${TH_S}">Descrição</th>
+    <th style="${TH_S};width:50px"></th>
+  </tr>`;
+  const concPill=(v)=>{const cfg={Concluído:['#E5F5ED','#166534'],'Em Andamento':['#FFF3E0','#92400E'],Cancelado:['var(--dal)','var(--da)']};const[bg,tc]=cfg[v]||['#F3F3EF','#9C9C96'];return`<span style="display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;background:${bg};color:${tc};white-space:nowrap">${v||'—'}</span>`;};
+  const tbody=arr.length?arr.map((a,i)=>{
+    const med=calcMedia(a.tec,a.prz,a.atd);
+    const mc=medalhaColor(med);
+    return`<tr onclick="openAvalModal(${i})" style="cursor:pointer;transition:background .1s" onmouseover="this.style.background='var(--sur2)'" onmouseout="this.style.background=''">
+      <td style="${TD_S};font-weight:700;min-width:150px">${a.obra||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S};min-width:120px">${a.disc||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S};min-width:150px;font-weight:600">${a.proj||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S}">${avalStarStr(a.tec,5)}</td>
+      <td style="${TD_S}">${avalStarStr(a.prz,5)}</td>
+      <td style="${TD_S}">${avalStarStr(a.atd,5)}</td>
+      <td style="${TD_S}"><span style="display:inline-block;padding:4px 11px;border-radius:20px;font-size:13px;font-weight:800;background:${mc.bg};color:${mc.tc};min-width:50px;text-align:center">${med>0?med.toFixed(1):'—'}</span></td>
+      <td style="${TD_S}">${concPill(a.conc)}</td>
+      <td style="${TD_S};max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${(a.desc||'').replace(/"/g,'')}">${a.desc||'<span style="color:var(--t3)">—</span>'}</td>
+      <td style="${TD_S}"><button class="btn bo bxs" onclick="event.stopPropagation();openAvalModal(${i})">✏</button></td>
+    </tr>`;
+  }).join(''):`<tr><td colspan="10" style="${TD_S};text-align:center;color:var(--t3);padding:32px">Nenhuma avaliação. Clique em <strong>+ Nova Avaliação</strong>.</td></tr>`;
+
+  // Summary cards by projetista
+  const byProj={};
+  arr.forEach(a=>{if(!a.proj)return;if(!byProj[a.proj])byProj[a.proj]={nome:a.proj,items:[],discs:new Set()};byProj[a.proj].items.push(a);byProj[a.proj].discs.add(a.disc);});
+  const summaryCards=Object.values(byProj).sort((a,b)=>{const ma=calcMedia(...a.items.flatMap(x=>[x.tec,x.prz,x.atd]).filter((_,i)=>i%3===0?x:null));return 0;}).map(p=>{
+    const medias=p.items.map(a=>calcMedia(a.tec,a.prz,a.atd)).filter(m=>m>0);
+    const med=medias.length?Math.round(medias.reduce((a,b)=>a+b,0)/medias.length*10)/10:0;
+    const mc=medalhaColor(med);
+    const tec=p.items.map(a=>a.tec).filter(v=>v>0);const prz=p.items.map(a=>a.prz).filter(v=>v>0);const atd=p.items.map(a=>a.atd).filter(v=>v>0);
+    const avg=arr=>arr.length?Math.round(arr.reduce((a,b)=>a+b,0)/arr.length*10)/10:0;
+    return`<div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);padding:16px 18px;display:flex;align-items:flex-start;gap:14px;flex-wrap:wrap">
+      <div style="flex:1;min-width:160px">
+        <div style="font-size:15px;font-weight:800;margin-bottom:3px">${p.nome}</div>
+        <div style="font-size:12px;color:var(--t3);margin-bottom:10px">${[...p.discs].join(' · ')} · ${p.items.length} avaliação(ões)</div>
+        <div style="display:flex;gap:14px;flex-wrap:wrap">
+          <div style="font-size:12px;color:var(--t2)"><span style="font-weight:700">Técnica:</span> ${avalStarStr(Math.round(avg(tec)),5)} <span style="color:var(--t3)">${avg(tec).toFixed(1)}</span></div>
+          <div style="font-size:12px;color:var(--t2)"><span style="font-weight:700">Prazo:</span> ${avalStarStr(Math.round(avg(prz)),5)} <span style="color:var(--t3)">${avg(prz).toFixed(1)}</span></div>
+          <div style="font-size:12px;color:var(--t2)"><span style="font-weight:700">Atendimento:</span> ${avalStarStr(Math.round(avg(atd)),5)} <span style="color:var(--t3)">${avg(atd).toFixed(1)}</span></div>
+        </div>
+      </div>
+      <div style="text-align:center;flex-shrink:0">
+        <div style="font-size:32px;font-weight:800;color:${mc.tc};line-height:1">${med>0?med.toFixed(1):'—'}</div>
+        <div style="font-size:10px;letter-spacing:1px;text-transform:uppercase;color:${mc.tc};margin-top:3px;padding:2px 8px;background:${mc.bg};border-radius:20px">${mc.label}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('tp-aval').innerHTML=`
+    <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;margin-bottom:18px">
+      <div style="display:flex;align-items:baseline;gap:6px">
+        <span style="font-size:22px;font-weight:800;line-height:1">${arr.length}</span>
+        <span style="font-size:13px;color:var(--t3);font-weight:600">avaliações registradas</span>
+      </div>
+      <button class="btn bp" style="padding:8px 16px;font-size:13px" onclick="openAvalModal(-1)">+ Nova Avaliação</button>
+    </div>
+    ${Object.keys(byProj).length?`<div style="margin-bottom:20px"><div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:12px">Ranking de Projetistas</div><div style="display:flex;flex-direction:column;gap:10px">${summaryCards}</div></div>`:''}
+    <div style="font-size:11px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:var(--t3);margin-bottom:12px">Todas as Avaliações</div>
+    <div style="background:var(--sur);border:1px solid var(--bor);border-radius:var(--rl);overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.05)">
+      <div style="overflow-x:auto;-webkit-overflow-scrolling:touch">
+        <table style="width:100%;border-collapse:collapse;min-width:950px"><thead>${thead}</thead><tbody>${tbody}</tbody></table>
+      </div>
+    </div>`;
+}
+
+function openAvalModal(idx){
+  const e=curEmp();if(!e)return;
+  const isNew=idx<0;const a=isNew?null:e.avaliacoes[idx];
+  document.getElementById('avalMT').textContent=isNew?'Nova Avaliação':'Editar Avaliação';
+  document.getElementById('aval-idx').value=idx;
+  document.getElementById('aval-obra').value=a?a.obra||e.nome||'':e.nome||'';
+  document.getElementById('aval-disc').value=a?a.disc||'':'';
+  document.getElementById('aval-proj').value=a?a.proj||'':'';
+  document.getElementById('aval-conc').value=a?a.conc||'Em Andamento':'Em Andamento';
+  document.getElementById('aval-desc').value=a?a.desc||'':'';
+  setAvalStar('tec',a?a.tec||0:0);
+  setAvalStar('prz',a?a.prz||0:0);
+  setAvalStar('atd',a?a.atd||0:0);
+  document.getElementById('aval-del').style.display=isNew?'none':'';
+  document.getElementById('aval-dup').style.display=isNew?'none':'';
+  document.getElementById('mo-aval').classList.add('open');
+}
+
+function setAvalStar(field,n){
+  const ids={tec:'avalStarsTec',prz:'avalStarsPrz',atd:'avalStarsAtd'};
+  const inputIds={tec:'aval-tec',prz:'aval-prz',atd:'aval-atd'};
+  document.getElementById(inputIds[field]).value=n;
+  document.querySelectorAll('#'+ids[field]+' span').forEach((s,i)=>{
+    s.textContent=i<n?'★':'☆';
+    s.style.color=i<n?'#F5A623':'#D5D3CB';
+  });
+}
+
+function saveAval(){
+  const obra=document.getElementById('aval-obra').value.trim();
+  const disc=document.getElementById('aval-disc').value.trim();
+  const proj=document.getElementById('aval-proj').value.trim();
+  if(!obra||!disc||!proj)return alert('Informe Nome da Obra, Disciplina e Projetista.');
+  const e=curEmp();if(!e)return;
+  if(!e.avaliacoes)e.avaliacoes=[];
+  const idx=parseInt(document.getElementById('aval-idx').value);const isNew=idx<0||isNaN(idx);
+  const tec=parseInt(document.getElementById('aval-tec').value)||0;
+  const prz=parseInt(document.getElementById('aval-prz').value)||0;
+  const atd=parseInt(document.getElementById('aval-atd').value)||0;
+  const obj={
+    id:isNew?uid():(e.avaliacoes[idx]?.id||uid()),
+    obra,disc,proj,tec,prz,atd,
+    media:calcMedia(tec,prz,atd),
+    conc:document.getElementById('aval-conc').value,
+    desc:document.getElementById('aval-desc').value
+  };
+  if(isNew)e.avaliacoes.push(obj);else e.avaliacoes[idx]=obj;
+  closeM('aval');save();renderAval();
+  toast('Avaliação salva');
+}
+
+function delAval(){
+  if(!confirm('Excluir esta avaliação?'))return;
+  const e=curEmp();if(!e)return;
+  e.avaliacoes.splice(parseInt(document.getElementById('aval-idx').value),1);
+  closeM('aval');save();renderAval();toast('Excluído');
+}
+
+function dupAval(){
+  const e=curEmp();if(!e)return;
+  const idx=parseInt(document.getElementById('aval-idx').value);
+  const cp=dc(e.avaliacoes[idx]);cp.id=uid();cp.proj+=' (Cópia)';
+  e.avaliacoes.splice(idx+1,0,cp);
+  closeM('aval');save();renderAval();toast('Duplicado');
+}
+
+function renderCurTab(){({dash:renderEmpDash,com:renderCom,leg:renderLeg,ante:renderAnte,exec:renderExec,doc:renderDoc,obra:renderObra}[DB.curTab]||renderEmpDash)();}
+
+// ══════════════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════════════
+function renderCal(){
+  const y=DB.calY,m=DB.calM;
+  const months=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  document.getElementById('calTitle').textContent=`${months[m]} ${y}`;
+  const first=new Date(y,m,1).getDay(),total=new Date(y,m+1,0).getDate(),today=new Date();
+  const dm={},evs=[];
+  allT().forEach(t=>{['prazo','validade'].forEach(f=>{
+    if(!t[f])return;try{const dt=new Date(t[f]);
+    if(dt.getMonth()===m&&dt.getFullYear()===y){const d=dt.getDate(),dif=ddiff(t[f]),tipo=dif<=7?'danger':dif<=30?'warn':'info';if(!dm[d]||tipo==='danger')dm[d]=tipo;evs.push({d,nome:t.nome,etapa:t.etapa,emp:t.empNome,tipo,campo:f});}
+    }catch(e){}
+  });});
+  const days=['D','S','T','Q','Q','S','S'];
+  let html=`<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;margin-bottom:4px">${days.map(d=>`<div style="text-align:center;font-size:11px;font-weight:700;color:var(--t3);padding:4px 0">${d}</div>`).join('')}</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">${'<div></div>'.repeat(first)}`;
+  for(let d=1;d<=total;d++){const iT=today.getDate()===d&&today.getMonth()===m&&today.getFullYear()===y,al=dm[d];html+=`<div style="aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:6px;font-size:13px;font-weight:${al||iT?'800':'400'};background:${al?`var(--${al==='danger'?'dal':al==='warn'?'wal':'inl'})`:iT?'var(--acl)':'transparent'};color:${al?`var(--${al==='danger'?'da':al==='warn'?'wa':'in'})`:iT?'var(--ac)':'var(--t)'};border:${iT?'2px solid var(--ac)':'1px solid transparent'}">${d}</div>`;}
+  document.getElementById('calGrid').innerHTML=html+'</div>';
+  evs.sort((a,b)=>a.d-b.d);
+  document.getElementById('calEvents').innerHTML=evs.length?evs.map(ev=>`<div class="card card-sm flex ac_ gap10"><div style="background:var(--${ev.tipo==='danger'?'da':ev.tipo==='warn'?'wa':'in'});color:#fff;border-radius:var(--r);padding:5px 9px;font-size:16px;font-weight:800;min-width:38px;text-align:center">${ev.d}</div><div><div style="font-size:13px;font-weight:700">${ev.nome}</div><div style="font-size:11px;color:var(--t3)">${ev.etapa} · ${ev.emp}</div></div></div>`).join(''):'<div style="color:var(--t3);font-size:14px">Sem eventos.</div>';
+}
+function chMonth(d){DB.calM+=d;if(DB.calM>11){DB.calM=0;DB.calY++}if(DB.calM<0){DB.calM=11;DB.calY--}save();renderCal();}
+
+// ══════════════════════════════════════════════
+// MODALS
+// ══════════════════════════════════════════════
+function closeM(id){document.getElementById('mo-'+id).classList.remove('open');}
+
+function openM(type,etapa){
+  if(type==='emp'){openMEmp(null);return;}
+  if(type==='disc'){
+    document.getElementById('disc-idx').value='';document.getElementById('disc-nome').value='';
+    document.getElementById('discMT').textContent='Nova Disciplina';
+    document.getElementById('disc-del').style.display='none';document.getElementById('disc-dup').style.display='none';
+    document.getElementById('mo-disc').classList.add('open');return;
+  }
+  if(type==='t')openMT(etapa||'legalizacao',-1,-1,null);
+}
+
+function openMT(etapa,idx,didx,t){
+  const isNew=!t||idx<0;
+  document.getElementById('t-eid').value=DB.curEmpId||'';
+  document.getElementById('t-etapa').value=etapa;
+  document.getElementById('t-idx').value=idx;
+  document.getElementById('t-didx').value=didx>=0?didx:'';
+  document.getElementById('tMT').textContent=isNew?'Nova Tarefa':'Editar Tarefa';
+  document.getElementById('t-nome').value=t?t.nome||'':'';
+  document.getElementById('t-status').value=t?t.status||'Não Iniciado':'Não Iniciado';
+  document.getElementById('t-resp').value=t?t.resp||'':'';
+  document.getElementById('t-prio').value=t?t.prio||'Alta':'Alta';
+  document.getElementById('t-orgao').value=t?t.orgao||'':'';
+  document.getElementById('t-proc').value=t?t.proc||'':'';
+  document.getElementById('t-proj').value=t?t.proj||'':'';
+  ['inicio','prazo','conclusao','validade'].forEach(f=>document.getElementById('t-'+f).value=t?t[f]||'':'');
+  document.getElementById('t-lembrete').value=t?t.lembrete||'Sem lembrete':'Sem lembrete';
+  document.getElementById('t-desc').value=t?t.desc||'':'';
+  document.getElementById('t-arq').textContent=t?t.arquivo||'':'';
+  document.getElementById('t-del').style.display=isNew?'none':'';
+  document.getElementById('t-dup').style.display=isNew?'none':'';
+  const isL=etapa==='legalizacao';
+  const isP=['anteprojeto','executivo','obra','documentacao','comercial'].includes(etapa);
+  document.getElementById('tOG').style.display=isL?'':'none';
+  document.getElementById('tPG').style.display=isL?'':'none';
+  document.getElementById('tJG').style.display=isP?'':'none';
+  document.getElementById('tVG').style.display=isL?'':'none';
+  const showD=etapa==='anteprojeto'&&isNew;
+  document.getElementById('tDG').style.display=showD?'':'none';
+  if(showD){const e=curEmp();if(e)document.getElementById('t-disc').innerHTML=(e.anteprojeto||[]).map((d,i)=>`<option value="${i}">${d.nome}</option>`).join('');}
+  document.getElementById('mo-t').classList.add('open');
+}
+
+function openMEmp(id){
+  const e=id?DB.emps.find(x=>x.id===id):null;
+  document.getElementById('empMT').textContent=e?'Editar Empreendimento':'Novo Empreendimento';
+  document.getElementById('emp-id').value=e?e.id:'';
+  document.getElementById('emp-nome').value=e?e.nome:'';
+  document.getElementById('emp-status').value=e?e.status:'Ativo';
+  document.getElementById('emp-end').value=e?e.endereco:'';
+  document.getElementById('emp-uni').value=e?e.unidades:'';
+  document.getElementById('emp-blo').value=e?e.blocos:'';
+  document.getElementById('emp-pav').value=e?e.pavimentos:'';
+  document.getElementById('emp-eng').value=e?e.engenheiro:'';
+  document.getElementById('emp-desc').value=e?e.desc:'';
+  document.getElementById('emp-del').style.display=e?'':'none';
+  document.getElementById('emp-dup').style.display=e?'':'none';
+  document.getElementById('mo-emp').classList.add('open');
+}
+function openEditDisc(di){
+  const e=curEmp();if(!e)return;
+  document.getElementById('disc-idx').value=di;document.getElementById('disc-nome').value=e.anteprojeto[di].nome;
+  document.getElementById('discMT').textContent='Editar Disciplina';
+  document.getElementById('disc-del').style.display='';document.getElementById('disc-dup').style.display='';
+  document.getElementById('mo-disc').classList.add('open');
+}
+function openAddToDisc(di){
+  openMT('anteprojeto',-1,-1,null);
+  document.getElementById('tDG').style.display='';
+  document.getElementById('tJG').style.display='';
+  document.getElementById('t-disc').value=di;
+}
+
+// ══════════════════════════════════════════════
+// SAVES
+// ══════════════════════════════════════════════
+function saveEmp(){
+  const nome=document.getElementById('emp-nome').value.trim();if(!nome)return alert('Informe o nome.');
+  const id=document.getElementById('emp-id').value;const isNew=!id;
+  const ex=id?DB.emps.find(x=>x.id===id):null;
+  const obj={
+    id:id||uid(),nome,status:document.getElementById('emp-status').value,
+    endereco:document.getElementById('emp-end').value,
+    unidades:parseInt(document.getElementById('emp-uni').value)||0,
+    blocos:parseInt(document.getElementById('emp-blo').value)||0,
+    pavimentos:parseInt(document.getElementById('emp-pav').value)||0,
+    engenheiro:document.getElementById('emp-eng').value,
+    desc:document.getElementById('emp-desc').value,
+    legalizacao:ex?ex.legalizacao:mkChk(CHK_LEG),
+    anteprojeto:ex?ex.anteprojeto:CHK_ANTE_DISC.map(n=>({nome:n,tarefas:[]})),
+    executivo:ex?ex.executivo:mkChk(CHK_EXEC),
+    documentacao:ex?ex.documentacao:CHK_DOC.map(mkDoc),
+    obra:ex?ex.obra:mkChk(CHK_OBRA),
+    comercial:ex?ex.comercial:[],
+    avaliacoes:ex?ex.avaliacoes:[]
+  };
+  if(!isNew){const i=DB.emps.findIndex(x=>x.id===id);DB.emps[i]=obj;}
+  else{DB.emps.push(obj);DB.curEmpId=obj.id;}
+  closeM('emp');save();renderSidebar();
+  if(isNew)openEmp(obj.id);else{renderEmpHeader();renderCurTab();}
+  toast('✅ Empreendimento salvo');
+}
+function deleteEmp(){
+  if(!confirm('Excluir empreendimento e TODOS os dados?'))return;
+  const id=document.getElementById('emp-id').value;
+  DB.emps=DB.emps.filter(x=>x.id!==id);
+  if(DB.curEmpId===id)DB.curEmpId=DB.emps[0]?.id||null;
+  closeM('emp');save();renderSidebar();goPage('home');toast('Excluído');
+}
+function dupEmp(){const id=document.getElementById('emp-id').value;closeM('emp');dupEmpById(id);}
+
+function saveT(){
+  const nome=document.getElementById('t-nome').value.trim();if(!nome)return alert('Informe o nome da tarefa.');
+  const empId=document.getElementById('t-eid').value||DB.curEmpId;
+  const e=DB.emps.find(x=>x.id===empId)||curEmp();
+  if(!e)return alert('Erro: empreendimento não encontrado.');
+  const etapa=document.getElementById('t-etapa').value;
+  const idx=parseInt(document.getElementById('t-idx').value);
+  const didx=parseInt(document.getElementById('t-didx').value);
+  const existId=idx>=0?(etapa==='anteprojeto'&&!isNaN(didx)&&didx>=0?e.anteprojeto[didx]?.tarefas[idx]?.id:e[etapa]?.[idx]?.id)||uid():uid();
+  const obj={id:existId,nome,status:document.getElementById('t-status').value,resp:document.getElementById('t-resp').value,prio:document.getElementById('t-prio').value,orgao:document.getElementById('t-orgao').value,proc:document.getElementById('t-proc').value,proj:document.getElementById('t-proj').value,inicio:document.getElementById('t-inicio').value,prazo:document.getElementById('t-prazo').value,conclusao:document.getElementById('t-conclusao').value,validade:document.getElementById('t-validade').value,lembrete:document.getElementById('t-lembrete').value,desc:document.getElementById('t-desc').value,arquivo:document.getElementById('t-arq').textContent};
+  if(etapa==='anteprojeto'){
+    if(!e.anteprojeto)e.anteprojeto=[];
+    const di=(!isNaN(didx)&&didx>=0)?didx:parseInt(document.getElementById('t-disc').value)||0;
+    if(!e.anteprojeto[di])e.anteprojeto[di]={nome:'Disciplina',tarefas:[]};
+    if(!e.anteprojeto[di].tarefas)e.anteprojeto[di].tarefas=[];
+    if(idx>=0)e.anteprojeto[di].tarefas[idx]=obj;else e.anteprojeto[di].tarefas.push(obj);
+  } else {
+    if(!e[etapa])e[etapa]=[];
+    if(idx>=0)e[etapa][idx]=obj;else e[etapa].push(obj);
+  }
+  closeM('t');save();renderEmpHeader();renderCurTab();toast('✅ Tarefa salva');
+}
+function delT(){
+  if(!confirm('Excluir esta tarefa?'))return;
+  const e=curEmp();if(!e)return;
+  const etapa=document.getElementById('t-etapa').value;
+  const idx=parseInt(document.getElementById('t-idx').value);
+  const didx=parseInt(document.getElementById('t-didx').value);
+  if(etapa==='anteprojeto'&&!isNaN(didx)&&didx>=0)e.anteprojeto[didx].tarefas.splice(idx,1);
+  else if(e[etapa])e[etapa].splice(idx,1);
+  closeM('t');save();renderEmpHeader();renderCurTab();toast('Tarefa excluída');
+}
+function dupTM(){const etapa=document.getElementById('t-etapa').value;const idx=parseInt(document.getElementById('t-idx').value);const didx=parseInt(document.getElementById('t-didx').value);closeM('t');if(etapa==='anteprojeto')qDupA(didx,idx);else qDup(etapa,idx);}
+
+function saveDisc(){
+  const nome=document.getElementById('disc-nome').value.trim();if(!nome)return alert('Informe o nome.');
+  const e=curEmp();if(!e)return;if(!e.anteprojeto)e.anteprojeto=[];
+  const idx=document.getElementById('disc-idx').value;
+  if(idx!=='')e.anteprojeto[parseInt(idx)].nome=nome;else e.anteprojeto.push({nome,tarefas:[]});
+  closeM('disc');save();renderAnte();toast('✅ Disciplina salva');
+}
+function delDisc(){if(!confirm('Excluir disciplina e tarefas?'))return;const e=curEmp();if(!e)return;e.anteprojeto.splice(parseInt(document.getElementById('disc-idx').value),1);closeM('disc');save();renderEmpHeader();renderAnte();toast('Disciplina excluída');}
+function dupDiscM(){const di=parseInt(document.getElementById('disc-idx').value);closeM('disc');qDupDisc(di);}
+
+// ══════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════
+function goPage(id,navEl){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(n=>n.classList.remove('active'));
+  const pg=document.getElementById('page-'+id);if(pg)pg.classList.add('active');
+  const titles={home:'PAINEL GERAL',emps:'EMPREENDIMENTOS',notif:'NOTIFICAÇÕES',cal:'CALENDÁRIO',cfg:'CONFIGURAÇÕES'};
+  document.getElementById('tbTitle').textContent=titles[id]||id.toUpperCase();
+  document.getElementById('tbBread').innerHTML='';
+  _curPage=id;
+  if(navEl)navEl.classList.add('active');
+  else document.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('data-p')===id)n.classList.add('active');});
+  const btn=document.getElementById('tbAction');
+  if(id==='home'||id==='emps'){btn.textContent='＋ Emp.';btn.onclick=()=>openM('emp');btn.style.display='';}
+  else btn.style.display='none';
+  if(id==='cfg')updateCfgStatusPage();
+  closeSb();renderAll();
+}
+
+function renderAll(){
+  renderNotifs();renderSidebar();
+  if(_curPage==='home')renderHome();
+  else if(_curPage==='emps')renderEmpsPage();
+  else if(_curPage==='cal')renderCal();
+  else if(_curPage==='emp'&&curEmp()){renderEmpHeader();renderCurTab();}
+}
+
+function toggleAcc(el){el.nextElementSibling.classList.toggle('open');el.querySelector('.acc-ch').classList.toggle('open');}
+
+// ══════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════
+(function init(){
+  // Load local storage first
+  loadLocal();
+  migrate();
+
+  // Check if credentials exist (from HTML embed or localStorage)
+  const embedUrl=(window.SOLA_CFG&&window.SOLA_CFG.url)||'';
+  const embedKey=(window.SOLA_CFG&&window.SOLA_CFG.key)||'';
+
+  if(embedUrl&&embedKey){
+    // Credentials embedded in HTML — skip setup screen
+    CFG={url:embedUrl.trim().replace(/\/+$/,''),key:embedKey.trim()};
+    saveLocal();
+    document.getElementById('setupScreen').classList.add('hidden');
+    _ready=true;
+    setSS('syncing','Conectando...');
+    pullCloud().then(ok=>{
+      if(ok){migrate();renderAll();renderSidebar();}
+      else{
+        // No data in cloud yet — push local data
+        pushCloud();
+      }
+      startPoll();
+    });
+  } else if(CFG.url&&CFG.key){
+    // Credentials in localStorage — skip setup
+    document.getElementById('setupScreen').classList.add('hidden');
+    _ready=true;
+    setSS('syncing','Conectando...');
+    pullCloud().then(ok=>{
+      if(ok){migrate();renderAll();renderSidebar();}
+      startPoll();
+    });
+  } else {
+    // No credentials anywhere — show setup screen
+    setSS('local','Configuração necessária');
+  }
+
+  if(!DB.emps.find(e=>e.id===DB.curEmpId))DB.curEmpId=DB.emps[0]?.id||null;
+  renderSidebar();renderHome();renderNotifs();
+
+  // Pull when tab becomes visible (user switches back)
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden&&CFG.url&&CFG.key){
+      pullCloud().then(ok=>{if(ok){migrate();renderAll();renderSidebar();}});
+    }
+  });
+})();
+</script>
+</body>
+</html>
